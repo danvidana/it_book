@@ -1,23 +1,20 @@
-import logo from "./logo.svg";
 import classes from "./App.module.css";
+import Empresas from "./Empresas/Empresas";
 
 function App() {
+	const empresas = {
+		empresa1: {
+			nombre: "empresa1",
+			id: 1,
+		},
+		empresa2: {
+			nombre: "empresa2",
+			id: 2,
+		},
+	};
 	return (
 		<div className={classes.App}>
-			<header className={classes.AppHeader}>
-				<img src={logo} className={classes.AppLogo} alt='logo' />
-				<p>
-					Edit <code>src/App.js</code> and save to reload.
-				</p>
-				<a
-					className={classes.AppLink}
-					href='https://reactjs.org'
-					target='_blank'
-					rel='noopener noreferrer'
-				>
-					Learn React
-				</a>
-			</header>
+			<Empresas listaEmpresas={empresas} />
 		</div>
 	);
 }
