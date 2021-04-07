@@ -1,7 +1,7 @@
 import React from "react";
 import {Navbar, Nav, NavDropdown} from 'react-bootstrap'
 import "./NavBar.css"
-// Componente del formulario para dar de alta una empresa
+// Componente del Menu
 
 const NavBar = () => {
 	return (
