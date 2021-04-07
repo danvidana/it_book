@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import classes from "./App.module.css";
 import Empresas from "./Components/Empresas/Empresas";
 import FormEmpresa from "./Components/FormEmpresa/FormEmpresa";
@@ -26,14 +26,13 @@ function App() {
 			
 			<Empresas listaEmpresas={empresas} />
 
-			<Button variant="primary" onClick={() => setShow(!show)}>
-                Registrar Empresa
-            </Button>
-            <br/>
-            <div style={{ display: show ? "block" : "none" }}>
-                <FormEmpresa/>
-            </div>
-
+			<Button variant='primary' onClick={() => setShow(!show)}>
+				Registrar Empresa
+			</Button>
+			<br />
+			<div style={{ display: show ? "block" : "none" }}>
+				<FormEmpresa />
+			</div>
 		</div>
 	);
 }
