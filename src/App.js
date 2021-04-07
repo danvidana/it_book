@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import classes from "./App.module.css";
 import Empresas from "./Components/Empresas/Empresas";
 import FormEmpresa from "./Components/FormEmpresa/FormEmpresa";
 import NavBar from "./Components/NavBar/NavBar";
-import {Button} from "react-bootstrap";
+import { BrowserRouter, Route } from "react-router-dom";
 
 function App() {
 	const empresas = {
@@ -17,23 +17,18 @@ function App() {
 		},
 	};
 
-	const [show, setShow] = useState(false);
-
 	return (
-		<div className={classes.App}>
-
-			<NavBar />
-			
-			<Empresas listaEmpresas={empresas} />
-
-			<Button variant='primary' onClick={() => setShow(!show)}>
-				Registrar Empresa
-			</Button>
-			<br />
-			<div style={{ display: show ? "block" : "none" }}>
-				<FormEmpresa />
+		<BrowserRouter>
+			<div className={classes.App}>
+				<NavBar />
+				<Route path='/' exact>
+					<Empresas listaEmpresas={empresas} />
+				</Route>
+				<Route path='/registrar-empresa'>
+					<FormEmpresa />
+				</Route>
 			</div>
-		</div>
+		</BrowserRouter>
 	);
 }
 
