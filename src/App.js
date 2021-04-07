@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import classes from "./App.module.css";
 import Empresas from "./Components/Empresas/Empresas";
 import FormEmpresa from "./Components/FormEmpresa/FormEmpresa";
-import { Container, Button } from "react-bootstrap";
+import NavBar from "./Components/NavBar/NavBar";
+import {Button} from "react-bootstrap";
 
 function App() {
 	const empresas = {
@@ -20,6 +21,9 @@ function App() {
 
 	return (
 		<div className={classes.App}>
+
+			<NavBar />
+			
 			<Empresas listaEmpresas={empresas} />
 
 			<Button variant='primary' onClick={() => setShow(!show)}>
