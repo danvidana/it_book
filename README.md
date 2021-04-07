@@ -60,23 +60,27 @@ You should ask for access to this tools if you don't have it already:
 <!-- You'll definitely want to install [`plis`](https://github.com/IcaliaLabs/plis), as in this case will
 let you bring up the containers needed for development. This is done by running the command
 `plis start`, which will start up the services in the `development` group (i.e. rails
-and sidekiq), along with their dependencies (posgres, redis, etc).
+and sidekiq), along with their dependencies (posgres, redis, etc). -->
 
-After installing please you can follow this simple steps:
+You'll definitely want to install the npm package manager, which comes bundled with [`Node.js`](https://nodejs.org/es/download/) when you install it on your system, use version 14.16.0. 
 
-1. Clone this repository into your local machine
+After installing you can follow this simple steps:
 
-```bash
-$ git clone git@github.com:IcaliaLabs/crowdfront.git
-```
+* Fire up a terminal
 
-2. Fire up a terminal and run:
+* Clone this repository into your local machine
 
 ```bash
-$ plis run web bash
+$ git clone https://github.com/ProyectoIntegrador2018/it_book.git
 ```
 
-3. Inside the container you need to migrate the database:
+* Install the project's dependencies:
+
+```bash
+$ npm install
+```
+
+<!-- 3. Inside the container you need to migrate the database:
 
 ```
 % rails db:migrate
@@ -84,32 +88,36 @@ $ plis run web bash
 
 ### Running the stack for Development
 
-<!-- 1. Fire up a terminal and run: 
+* Fire up a terminal and run: 
 
 ```
-plis start
+npm start
 ```
 
-That command will lift every service crowdfront needs, such as the `rails server`, `postgres`, and `redis`.
+<!-- That command will lift every service crowdfront needs, such as the `rails server`, `postgres`, and `redis`.
 
 
 It may take a while before you see anything, you can follow the logs of the containers with:
 
 ```
 $ docker-compose logs
-```
+``` -->
 
 Once you see an output like this:
 
 ```
-web_1   | => Booting Puma
-web_1   | => Rails 5.1.3 application starting in development on http://0.0.0.0:3000
-web_1   | => Run `rails server -h` for more startup options
-web_1   | => Ctrl-C to shutdown server
-web_1   | Listening on 0.0.0.0:3000, CTRL+C to stop
+Compiled successfully!
+
+You can now view itbook in the browser.
+
+  Local:            http://localhost:3000        
+  On Your Network:  http://192.168.1.70:3000     
+
+Note that the development build is not optimized.
+To create a production build, use yarn build. 
 ```
 
-This means the project is up and running. -->
+This means the project is up and running.
 
 ### Stop the project
 
