@@ -1,5 +1,8 @@
+import React, {useState} from "react";
 import classes from "./App.module.css";
-import Empresas from "./Empresas/Empresas";
+import Empresas from "./Components/Empresas/Empresas";
+import FormEmpresa from "./Components/FormEmpresa/FormEmpresa";
+import {Container, Button} from "react-bootstrap";
 
 function App() {
 	const empresas = {
@@ -12,9 +15,21 @@ function App() {
 			id: 2,
 		},
 	};
+
+	const [show, setShow] = useState(false);
+
 	return (
 		<div className={classes.App}>
 			<Empresas listaEmpresas={empresas} />
+
+			<Button variant="primary" onClick={() => setShow(!show)}>
+                Registrar Empresa
+            </Button>
+            <br/>
+            <div style={{ display: show ? "block" : "none" }}>
+                <FormEmpresa/>
+            </div>
+
 		</div>
 	);
 }
