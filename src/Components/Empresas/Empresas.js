@@ -1,17 +1,31 @@
-import React, { Fragment } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Empresa from "./Empresa/Empresa";
+import { CardDeck } from "react-bootstrap";
+import { FirebaseContext } from "../../API/index";
 
 const Empresas = (props) => {
-	let listaEmpresas = Object.keys(props.listaEmpresas)
-		.map((key) => {
-			return [...Array(props.listaEmpresas[key])].map((el, _) => {
-				return <Empresa key={el.id} empresa={el} />;
+	const firebase = useContext(FirebaseContext);
+	const [empresas, setEmpresa] = useState([]);
+
+	useEffect(() => {
+		firebase.getAllEmpresas().then((result) => {
+			let listaEmpresas = result.map((empresa) => {
+				console.log(empresa);
+				return (
+					<Empresa
+						key={empresa.id}
+						nombre={empresa.nombre_comercial}
+						giro={empresa.giro}
+						email={empresa.email}
+						descripcion={empresa.descripcion}
+					/>
+				);
 			});
-		})
-		.reduce((arr, el) => {
-			return arr.concat(el);
-		}, []);
-	return <Fragment>{listaEmpresas}</Fragment>;
+			console.log(listaEmpresas);
+			setEmpresa(listaEmpresas);
+		});
+	}, [firebase]);
+	return <CardDeck>{empresas}</CardDeck>;
 };
 
 export default Empresas;

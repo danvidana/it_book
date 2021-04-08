@@ -4,7 +4,7 @@ import Empresas from "./Components/Empresas/Empresas";
 import FormEmpresa from "./Components/FormEmpresa/FormEmpresa";
 import NavBar from "./Components/NavBar/NavBar";
 import { BrowserRouter, Route } from "react-router-dom";
-import { CardDeck, CardGroup, Container } from "react-bootstrap";
+import { Container } from "react-bootstrap";
 
 function App() {
 	const empresas = {
@@ -80,9 +80,7 @@ function App() {
 				<NavBar />
 				<Route path='/' exact>
 					<Container className={classes.empresasContainer}>
-						<CardDeck>
 							<Empresas listaEmpresas={empresas} />
-						</CardDeck>
 					</Container>
 
 				</Route>
