@@ -121,6 +121,16 @@ This means the project is up and running.
 
 ### Stop the project
 
+In order to stop the project from running in your localhost:3000 you can type Control-c for windows or Command-c for mac
+
+After that you will see the following output:
+
+```
+Terminate batch job (Y/N)? 
+```
+
+Type Y then enter and the project will be stopped.
+
 <!-- In order to stop crowdfront as a whole you can run:
 
 ```
