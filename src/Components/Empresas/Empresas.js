@@ -14,6 +14,9 @@ const Empresas = (props) => {
 					<Empresa
 						key={empresa.id}
 						nombre={empresa.nombre_comercial}
+						giro={empresa.giro}
+						email={empresa.email}
+						descripcion={empresa.descripcion}
 					/>
 				);
 			});
@@ -21,7 +24,6 @@ const Empresas = (props) => {
 			setEmpresa(listaEmpresas);
 		});
 	}, [firebase]);
-
 	return <CardDeck>{empresas}</CardDeck>;
 };
 
