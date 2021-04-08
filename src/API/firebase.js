@@ -26,7 +26,11 @@ class Firebase {
 
 	getAllEmpresas = async () => {
 		const empresas = await this.firestore.collection("Empresas").get();
-		return empresas.docs;
+		return empresas.docs.map((doc) => {
+			var data = doc.data();
+			data.id = doc.id;
+			return data;
+		});
 	};
 
 	addEmpresa = async (empresa) => {
