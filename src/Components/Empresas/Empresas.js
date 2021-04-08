@@ -10,7 +10,6 @@ const Empresas = (props) => {
 	useEffect(() => {
 		firebase.getAllEmpresas().then((result) => {
 			let listaEmpresas = result.map((empresa) => {
-				console.log(empresa);
 				return (
 					<Empresa
 						key={empresa.id}
