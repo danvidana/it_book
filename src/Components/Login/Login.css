@@ -1,0 +1,51 @@
+
+#login {
+    justify-content: center;
+    /* margin: 20px; */
+    /* background-color: black; */
+}
+
+#row-login {
+    width: 100%;
+    margin: 0 !important;
+}
+
+#col-login {
+    vertical-align: middle;
+    margin: auto;
+    padding: 0;
+}
+
+#col-login-image {
+    vertical-align: middle;
+    margin: auto;
+    padding: 0;
+}
+
+#loginForm {
+    max-width: 450px; 
+    margin: 0 auto;
+    padding: 10px;
+    text-align: left;
+}
+
+#cajaLogin {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: rgb(229, 229, 236);
+    border-color: rgb(182, 182, 187) !important; 
+    color: #f05d29;
+    padding-bottom: 10px;
+}
+
+#btn-Login {
+    /* margin-right: 10px; */
+    float: right;
+    background-color: #f05d29 !important;
+    border-color: #f05d29 !important;
+} 
+
+#mty-image {
+    width: 100%;
+    /* max-height: 500px; */
+}
