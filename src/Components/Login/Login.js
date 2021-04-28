@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { FirebaseContext } from "../../API/index";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import mty from "../../images/mty.jpg";
 import "./Login.css";
+import { CurrentUserContext } from "../../CurrentUserContext";
 
 // Componente del formulario para dar de alta una empresa
 
@@ -13,7 +14,7 @@ const Login = () => {
 	const history = useHistory();
 	const [item, setItem] = useState({
 		correo: "",
-		contraseña: "",
+		password: "",
 	});
 
 	const submitChanges = async (event) => {
@@ -21,7 +22,7 @@ const Login = () => {
 		let message = "";
 		try {
 			firebase
-				.signInWithUserAndPassword(item.email, item.password)
+				.signInWithUserAndPassword(item.correo, item.password)
 				.then((user) => {
 					history.push("/");
 					fetchCurrentUser();
@@ -29,15 +30,11 @@ const Login = () => {
 				.catch((error) => {
 					console.log(error);
 					switch (error.code) {
-						case "auth/email-already-in-use":
-							message = "Este correo ya esta existe!";
+						case "auth/user-not-found":
+							message = "El correo es incorrecto!";
 							break;
-						case "auth/invalid-email":
-							message = "El correo ingresado es invalido";
-							break;
-						case "auth/weak-password":
-							message =
-								"La contraseña debe tener minimo 6 caracteres";
+						case "auth/wrong-password":
+							message = "La contraseña es incorrecta!";
 							break;
 						default:
 							message =
@@ -126,7 +123,7 @@ const Login = () => {
 									onChange={(str) => {
 										setItem({
 											...item,
-											contraseña: str.currentTarget.value,
+											password: str.currentTarget.value,
 										});
 									}}
 								/>

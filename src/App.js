@@ -7,8 +7,6 @@ import RegistroUsuario from "./Components/RegistroUsuario/RegistroUsuario";
 import Login from "./Components/Login/Login";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
-import FormRegistro from "./Components/FormRegistro/FormRegistro";
-import Login from "./Components/Login/Login";
 import { CurrentUserProvider } from "./CurrentUserContext";
 
 const App = () => {
@@ -19,7 +17,7 @@ const App = () => {
 					<NavBar />
 					<Route path='/' exact>
 						<Container className={classes.empresasContainer}>
-							<Empresas listaEmpresas={empresas} />
+							<Empresas />
 						</Container>
 					</Route>
 					<Route path='/registrar-empresa'>
