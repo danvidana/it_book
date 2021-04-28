@@ -58,6 +58,10 @@ class Firebase {
 	addEmpresa = async (empresa) => {
 		await this.firestore.collection("Empresas").add(empresa);
 	};
+
+	isAdminUser = async (email) => {
+		await this.firestore.collection("adminUsers").doc(email);
+	};
 }
 
 export default Firebase;
