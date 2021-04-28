@@ -3,7 +3,7 @@ import Empresa from "./Empresa/Empresa";
 import { CardDeck } from "react-bootstrap";
 import { FirebaseContext } from "../../API/index";
 
-const Empresas = (props) => {
+const Empresas = () => {
 	const firebase = useContext(FirebaseContext);
 	const [empresas, setEmpresa] = useState([]);
 
