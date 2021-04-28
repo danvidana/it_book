@@ -51,7 +51,9 @@ const FormEmpresa = () => {
 		window.alert(message);
 	};
 	return (
-		<Form onSubmit={submitChanges}>
+		<Form 
+		id="formEmpresa"
+		onSubmit={submitChanges}>
 			{/* <h2>IT-BOOK</h2> */}
 
 			<h5>Datos Públicos</h5>
@@ -406,7 +408,7 @@ const FormEmpresa = () => {
 				/>
 			</Form.Group>
 
-			<Button className='btn-submitForm' variant='primary' type='submit'>
+			<Button id="btn-submitForm" className='btn-submit' variant='primary' type='submit'>
 				Guardar
 			</Button>
 		</Form>

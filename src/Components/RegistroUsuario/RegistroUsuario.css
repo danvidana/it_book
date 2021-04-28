@@ -1,0 +1,50 @@
+
+#registro {
+    justify-content: center;
+    /* margin: 20px; */
+}
+
+#row-registro {
+    width: 100%;
+    margin: 0 !important;
+}
+
+#col-registro {
+    vertical-align: middle;
+    margin: auto;
+    padding: 0;
+}
+
+#col-registro-image {
+    vertical-align: middle;
+    margin: auto;
+    padding: 0;
+}
+
+#registroForm {
+    max-width: 450px; 
+    margin: 0 auto;
+    padding: 10px;
+    text-align: left;
+}
+
+#cajaRegistro {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: rgb(229, 229, 236);
+    border-color: rgb(182, 182, 187) !important; 
+    color: #f05d29;
+    padding-bottom: 50px;
+}
+
+#btn-nuevoUsuario {
+    /* margin: 10px; */
+    float: right;
+    background-color: #f05d29 !important;
+    border-color: #f05d29 !important;
+} 
+
+#mty-image {
+    width: 100%;
+    /* max-height: 500px; */
+}
