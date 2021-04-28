@@ -24,6 +24,28 @@ class Firebase {
 		this.storage = app.storage();
 	}
 
+	createNewUser = async (email, password) => {
+		return this.auth.createUserWithEmailAndPassword(email, password);
+	};
+
+	signInWithCredential = async (credential) => {
+		return this.auth.signInWithCredential(credential);
+	};
+
+	signInWithUserAndPassword = async (email, password) => {
+		return this.auth.signInWithEmailAndPassword(email, password);
+	};
+
+	signout = () => this.auth.signOut();
+
+	getAuthUser = () =>
+		new Promise((resolve, reject) => {
+			this.auth.onAuthStateChanged((authUser) => {
+				if (authUser) resolve(authUser);
+				reject("No logged user!");
+			});
+		});
+
 	getAllEmpresas = async () => {
 		const empresas = await this.firestore.collection("Empresas").get();
 		return empresas.docs.map((doc) => {

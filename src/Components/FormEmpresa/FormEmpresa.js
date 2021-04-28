@@ -38,7 +38,7 @@ const FormEmpresa = () => {
 
 	const submitChanges = async (event) => {
 		event.preventDefault();
-		let message = "Se ha subido la notificación";
+		let message = "Se ha subido la empresa";
 		try {
 			const copy = item;
 			await firebase.addEmpresa(copy);
