@@ -31,6 +31,11 @@ const NavBar = () => {
 					<Nav.Link as={Link} to='/csoft-mty'>
 						CSOFTMTY
 					</Nav.Link>
+					{currentUser !== null && currentUser.isAdmin === "true" ? (
+						<Nav.Link as={Link} to='/admin-panel'>
+							Admin Panel
+						</Nav.Link>
+					) : null}
 					{currentUser !== null ? (
 						<Nav.Link
 							as={Link}

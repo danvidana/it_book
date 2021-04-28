@@ -5,19 +5,51 @@ export const CurrentUserContext = React.createContext(null);
 
 export const CurrentUserProvider = ({ children }) => {
 	const firebase = useContext(FirebaseContext);
-	const [currentUser, setCurrentUser] = React.useState(
-		JSON.parse(localStorage.getItem("authUser"))
-	);
+	var tempUser = JSON.parse(localStorage.getItem("authUser"));
+	if (tempUser !== null) {
+		tempUser["isAdmin"] = localStorage.getItem("isAdmin");
+	}
+	const [currentUser, setCurrentUser] = React.useState(tempUser);
 
 	const fetchCurrentUser = async () => {
 		firebase
 			.getAuthUser()
 			.then((user) => {
-				localStorage.setItem("authUser", JSON.stringify(user));
-				setCurrentUser(JSON.stringify(user));
+				if (user !== null) {
+					localStorage.setItem("authUser", JSON.stringify(user));
+					localStorage.setItem("isAdmin", false);
+					firebase.firestore
+						.collection("adminUsers")
+						.doc(user.email)
+						.get()
+						.then((doc) => {
+							if (doc.exists) {
+								localStorage.setItem("isAdmin", true);
+							} else {
+								console.log(doc);
+								localStorage.setItem("isAdmin", false);
+							}
+						})
+						.catch(() => {
+							localStorage.setItem("isAdmin", false);
+						})
+						.finally(() => {
+							tempUser = JSON.parse(
+								localStorage.getItem("authUser")
+							);
+							if (tempUser !== null) {
+								tempUser["isAdmin"] = localStorage.getItem(
+									"isAdmin"
+								);
+							}
+							setCurrentUser(tempUser);
+							console.log(currentUser);
+						});
+				}
 			})
 			.catch((e) => {
 				localStorage.removeItem("authUser");
+				localStorage.removeItem("isAdmin");
 				setCurrentUser(null);
 			});
 	};
