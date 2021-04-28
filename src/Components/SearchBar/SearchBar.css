@@ -1,0 +1,27 @@
+
+#searchbox {
+    background-image: url("../../images/searchbar.jpg");
+    background-color: #cccccc; /* Used if the image is unavailable */
+    height: 400px; /* You must set a specified height */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+    background-size: cover; 
+}
+
+#search-row {
+    margin: 0px;
+    height: 100%;
+    padding: 0px 20px;
+}
+
+#search-col {
+    vertical-align: middle;
+    margin: auto;
+    padding: 0px;
+}
+
+#btn-search {
+    float: left;
+    background-color: #f05d29 !important;
+    border-color: #f05d29 !important;
+}
