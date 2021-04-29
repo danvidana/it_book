@@ -16,9 +16,10 @@ const App = () => {
 				<div className={classes.App}>
 					<NavBar />
 					<Route path='/' exact>
-						<Container className={classes.empresasContainer}>
+						{/* <div className={classes.empresasContainer}> */}
 							<Empresas />
-						</Container>
+							<br />
+						{/* </div> */}
 					</Route>
 					<Route path='/registrar-empresa'>
 						<FormEmpresa />
