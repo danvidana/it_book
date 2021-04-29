@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import classes from "./App.module.css";
 import Empresas from "./Components/Empresas/Empresas";
 import FormEmpresa from "./Components/FormEmpresa/FormEmpresa";
@@ -8,8 +8,12 @@ import Login from "./Components/Login/Login";
 import { BrowserRouter, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { CurrentUserProvider } from "./CurrentUserContext";
+import DetalleEmpresa from "./Components/DetalleEmpresa/DetalleEmpresa";
 
 const App = () => {
+	const [empresa, setEmpresa] = useState({});
+
+
 	return (
 		<CurrentUserProvider>
 			<BrowserRouter>
@@ -17,10 +21,11 @@ const App = () => {
 					<NavBar />
 					<Route path='/' exact>
 						{/* <div className={classes.empresasContainer}> */}
-							<Empresas />
+							<Empresas setEmpresa = {setEmpresa} />
 							<br />
 						{/* </div> */}
 					</Route>
+
 					<Route path='/registrar-empresa'>
 						<FormEmpresa />
 					</Route>
@@ -32,6 +37,11 @@ const App = () => {
 					<Route path='/registrar-usuario'>
 						<RegistroUsuario />
 					</Route>
+					
+					<Route path='/empresa/:id'>
+						<DetalleEmpresa datosEmpresa={empresa}/>
+					</Route>
+
 				</div>
 			</BrowserRouter>
 		</CurrentUserProvider>
