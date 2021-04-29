@@ -54,6 +54,27 @@ class Firebase {
 			return data;
 		});
 	};
+	getEmpresasByName = async (name) => {	
+		if (name === "") {
+			const empresas = await this.firestore.collection("Empresas").get();
+			return empresas.docs.map((doc) => {
+				var data = doc.data();
+				data.id = doc.id;
+				return data;
+			});
+		}else{
+			const empresas = await this.firestore
+			.collection("Empresas")
+			.where("nombre_comercial", "==", name)
+			.get();
+			return empresas.docs.map((doc) => {
+				var data = doc.data();
+				data.id = doc.id;
+			return data;
+			});
+		}
+		
+	};
 
 	addEmpresa = async (empresa) => {
 		await this.firestore.collection("Empresas").add(empresa);

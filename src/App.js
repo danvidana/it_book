@@ -5,7 +5,6 @@ import FormEmpresa from "./Components/FormEmpresa/FormEmpresa";
 import NavBar from "./Components/NavBar/NavBar";
 import RegistroUsuario from "./Components/RegistroUsuario/RegistroUsuario";
 import Login from "./Components/Login/Login";
-import SearchBar from "./Components/SearchBar/SearchBar"
 import { BrowserRouter, Route } from "react-router-dom";
 import { Container } from "react-bootstrap";
 import { CurrentUserProvider } from "./CurrentUserContext";
@@ -17,7 +16,6 @@ const App = () => {
 				<div className={classes.App}>
 					<NavBar />
 					<Route path='/' exact>
-						<SearchBar />
 						<Container className={classes.empresasContainer}>
 							<Empresas />
 						</Container>

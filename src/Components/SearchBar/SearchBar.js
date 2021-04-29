@@ -1,17 +1,13 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { FirebaseContext } from "../../API/index";
-import { Form, Button, Row, Col, Container } from "react-bootstrap";
+import { Form, Row, Col,} from "react-bootstrap";
 import "./SearchBar.css";
-import { CurrentUserContext } from "../../CurrentUserContext";
-import { useHistory } from "react-router";
-
 // Componente del formulario para dar de alta una empresa
 
-const SearchBar = () => {
+const SearchBar = (props) => {
 	const firebase = useContext(FirebaseContext);
-	const [item, setItem] = useState({
-		search: ""
-	});
+    
+    
 
 	return (
 		<div id='searchbox' className='justify-content-center'>
@@ -26,27 +22,11 @@ const SearchBar = () => {
                                 >
                                     <Form.Control
                                         placeholder='Ingresa una empresa'
-                                        onChange={(str) => {
-                                            setItem({
-                                                ...item,
-                                                search: str.currentTarget.value,
-                                            });
-                                        }}
+                                        onChange={(str) => props.setName(str.target.value)}
                                     />
                                     <br />
                                 </Col>
-
-                                <Col sm={4} md={5} lg={6}>
-                                    <Button
-                                        id='btn-search'
-                                        className='btn-search'
-                                        variant='primary'
-                                    >
-                                        Buscar
-                                    </Button>
-                                </Col>
-                            </Row>
-                        
+                            </Row>     
                     </Form.Group>
                 </Form>
                 </Col>

@@ -1,14 +1,20 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, Fragment } from "react";
 import Empresa from "./Empresa/Empresa";
+import SearchBar from "../SearchBar/SearchBar";
 import { CardDeck } from "react-bootstrap";
 import { FirebaseContext } from "../../API/index";
 
-const Empresas = () => {
+
+const Empresas = (props) => {
 	const firebase = useContext(FirebaseContext);
 	const [empresas, setEmpresa] = useState([]);
-
+	const [nombre, setNombre] = useState('');
+	const setName = (Name) =>{
+		setNombre(Name);
+	};
+	
 	useEffect(() => {
-		firebase.getAllEmpresas().then((result) => {
+		firebase.getEmpresasByName(nombre).then((result) => {
 			let listaEmpresas = result.map((empresa) => {
 				return (
 					<Empresa
@@ -23,8 +29,12 @@ const Empresas = () => {
 			console.log(listaEmpresas);
 			setEmpresa(listaEmpresas);
 		});
-	}, [firebase]);
-	return <CardDeck>{empresas}</CardDeck>;
+	}, [firebase,nombre]);
+	return  <Fragment>
+				<SearchBar setName = {setName}/>
+				<CardDeck>{empresas}</CardDeck>
+			</Fragment>	
+	
 };
 
 export default Empresas;
