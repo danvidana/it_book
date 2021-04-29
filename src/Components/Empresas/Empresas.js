@@ -19,10 +19,14 @@ const Empresas = (props) => {
 				return (
 					<Empresa
 						key={empresa.id}
+						empresa={empresa}
+						setEmpresa={props.setEmpresa}
+						/*
 						nombre={empresa.nombre_comercial}
 						giro={empresa.giro}
 						email={empresa.email}
 						descripcion={empresa.descripcion}
+						*/
 					/>
 				);
 			});
