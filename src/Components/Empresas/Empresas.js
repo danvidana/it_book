@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState, Fragment } from "react";
 import Empresa from "./Empresa/Empresa";
 import SearchBar from "../SearchBar/SearchBar";
-import { CardDeck } from "react-bootstrap";
+import { CardDeck, Container } from "react-bootstrap";
 import { FirebaseContext } from "../../API/index";
 
 
@@ -32,9 +32,12 @@ const Empresas = (props) => {
 	}, [firebase,nombre]);
 	return  <Fragment>
 				<SearchBar setName = {setName}/>
-				<CardDeck>{empresas}</CardDeck>
+				<Container style={{minWidth: "90%"}}>
+					<CardDeck style={{width:"100%", margin: "0px"}}>{empresas}</CardDeck>
+				</Container>
 			</Fragment>	
 	
 };
 
 export default Empresas;
+
