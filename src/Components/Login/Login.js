@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { FirebaseContext } from "../../API/index";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import mty from "../../images/mty.jpg";
+// import mty from "../../images/mty.jpg";
 import "./Login.css";
 import { CurrentUserContext } from "../../CurrentUserContext";
 
@@ -96,7 +96,8 @@ const Login = () => {
 	return (
 		<div id='login' className='justify-content-center'>
 			<Row id='row-login'>
-				<Col sm={5} md={5} id='col-login'>
+				<Col sm={2} md={3}></Col>
+				<Col sm={8} md={6} id='col-login'>
 					<div id='cajaLogin'>
 						<h3 style={{ paddingTop: "10px" }}>Iniciar Sesión</h3>
 						<Form id='loginForm' onSubmit={submitChanges}>
@@ -155,10 +156,11 @@ const Login = () => {
 						</Form>
 					</div>
 				</Col>
-
-				<Col sm={7} md={7} id='col-login-image'>
+				
+				<Col sm={2} md={3}></Col>
+				{/* <Col sm={7} md={7} id='col-login-image'>
 					<img id='mty-image' src={mty} alt='monterrey' />
-				</Col>
+				</Col> */}
 			</Row>
 		</div>
 	);
