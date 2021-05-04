@@ -6,7 +6,7 @@ import { FirebaseContext } from "../../API/index";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const Empresas = (props) => {
-	const maxItems = 2;
+	const maxItems = 15;
 	const firebase = useContext(FirebaseContext);
 	const [empresas, setEmpresa] = useState([]);
 	const [nombre, setNombre] = useState("");
