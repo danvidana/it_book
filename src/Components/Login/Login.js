@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { FirebaseContext } from "../../API/index";
 import { Form, Button, Row, Col } from "react-bootstrap";
@@ -12,18 +12,18 @@ const Login = () => {
 	const firebase = useContext(FirebaseContext);
 	const { fetchCurrentUser } = useContext(CurrentUserContext);
 	const history = useHistory();
-	const [item, setItem] = useState({
-		correo: "",
-		password: "",
-	});
+	const emailRef = useRef();
+	const passwordRef = useRef();
 
 	const submitChanges = async (event) => {
 		event.preventDefault();
+		let email = emailRef.current.value;
+		let password = passwordRef.current.value;
 		let message = "";
 		try {
 			firebase
-				.signInWithUserAndPassword(item.correo, item.password)
-				.then((user) => {
+				.signInWithUserAndPassword(email, password)
+				.then(() => {
 					history.push("/");
 					fetchCurrentUser();
 				})
@@ -105,12 +105,7 @@ const Login = () => {
 								<Form.Control
 									className='formControl'
 									placeholder='Correo'
-									onChange={(str) => {
-										setItem({
-											...item,
-											correo: str.currentTarget.value,
-										});
-									}}
+									ref={emailRef}
 								/>
 							</Form.Group>
 
@@ -120,12 +115,7 @@ const Login = () => {
 									className='formControl'
 									placeholder='Contraseña'
 									type='password'
-									onChange={(str) => {
-										setItem({
-											...item,
-											password: str.currentTarget.value,
-										});
-									}}
+									ref={passwordRef}
 								/>
 							</Form.Group>
 
