@@ -6,14 +6,12 @@ import NavBar from "./Components/NavBar/NavBar";
 import RegistroUsuario from "./Components/RegistroUsuario/RegistroUsuario";
 import Login from "./Components/Login/Login";
 import { BrowserRouter, Route } from "react-router-dom";
-// import { Container } from "react-bootstrap";
 import { CurrentUserProvider } from "./CurrentUserContext";
 import DetalleEmpresa from "./Components/DetalleEmpresa/DetalleEmpresa";
 import QuienesSomos from "./Components/QuienesSomos/QuienesSomos";
 
 const App = () => {
 	const [empresa, setEmpresa] = useState({});
-
 
 	return (
 		<CurrentUserProvider>
@@ -22,8 +20,8 @@ const App = () => {
 					<NavBar />
 					<Route path='/' exact>
 						{/* <div className={classes.empresasContainer}> */}
-							<Empresas setEmpresa = {setEmpresa} />
-							<br />
+						<Empresas setEmpresa={setEmpresa} />
+						<br />
 						{/* </div> */}
 					</Route>
 
@@ -38,15 +36,10 @@ const App = () => {
 					<Route path='/registrar-usuario'>
 						<RegistroUsuario />
 					</Route>
-					
+
 					<Route path='/empresa/:id'>
-						<DetalleEmpresa datosEmpresa={empresa}/>
+						<DetalleEmpresa datosEmpresa={empresa} />
 					</Route>
-
-					<Route path='/quienes-somos'>
-						<QuienesSomos />
-					</Route>
-
 				</div>
 			</BrowserRouter>
 		</CurrentUserProvider>

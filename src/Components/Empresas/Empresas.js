@@ -3,45 +3,116 @@ import Empresa from "./Empresa/Empresa";
 import SearchBar from "../SearchBar/SearchBar";
 import { CardDeck, Container } from "react-bootstrap";
 import { FirebaseContext } from "../../API/index";
-
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const Empresas = (props) => {
+	const maxItems = 15;
 	const firebase = useContext(FirebaseContext);
 	const [empresas, setEmpresa] = useState([]);
-	const [nombre, setNombre] = useState('');
-	const setName = (Name) =>{
-		setNombre(Name);
-	};
-	
+	const [nombre, setNombre] = useState("");
+	const [lastItem, setLastItem] = useState("");
+	const [hasMore, setHasMore] = useState(true);
+	const [firstLoad, setFirstLoad] = useState(true);
+
 	useEffect(() => {
-		firebase.getEmpresasByName(nombre).then((result) => {
-			let listaEmpresas = result.map((empresa) => {
+		let timer = 500;
+		if (firstLoad) {
+			timer = 0;
+			setFirstLoad(false);
+		}
+		const timeout = setTimeout(() => {
+			retrieveData();
+		}, timer);
+		return () => {
+			console.log("CLEANUP");
+			clearTimeout(timeout);
+		};
+		// eslint-disable-next-line
+	}, [firebase, nombre, props.setEmpresa]);
+
+	const retrieveData = () => {
+		console.log(nombre);
+		firebase.getEmpresasByName(nombre, maxItems).then((result) => {
+			const listaEmpresas = result.map((empresa) => {
 				return (
 					<Empresa
 						key={empresa.id}
 						empresa={empresa}
 						setEmpresa={props.setEmpresa}
-						/*
-						nombre={empresa.nombre_comercial}
-						giro={empresa.giro}
-						email={empresa.email}
-						descripcion={empresa.descripcion}
-						*/
 					/>
 				);
 			});
-			console.log(listaEmpresas);
 			setEmpresa(listaEmpresas);
+			let lastItemTemp;
+			if (result.length !== 0) {
+				lastItemTemp = result[result.length - 1].nombre_comercial;
+				setLastItem(lastItemTemp);
+				if (result.length < maxItems) {
+					setHasMore(false);
+				} else if (document.body.clientHeight <= window.innerHeight) {
+					retrieveMore(lastItemTemp);
+				}
+			}
+			if (result.length < maxItems) {
+				setHasMore(false);
+			}
 		});
-	}, [firebase,nombre]);
-	return  <Fragment>
-				<SearchBar setName = {setName}/>
-				<Container style={{minWidth: "90%"}}>
-					<CardDeck style={{width:"100%", margin: "0px"}}>{empresas}</CardDeck>
-				</Container>
-			</Fragment>	
-	
+	};
+	const retrieveMore = (lastItem) => {
+		firebase
+			.getMoreEmpresasByName(nombre, lastItem, maxItems)
+			.then((result) => {
+				if (result.length !== 0) {
+					const listaEmpresas = result.map((empresa) => {
+						return (
+							<Empresa
+								key={empresa.id}
+								empresa={empresa}
+								setEmpresa={props.setEmpresa}
+							/>
+						);
+					});
+					lastItem = result[result.length - 1].nombre_comercial;
+					setLastItem(lastItem);
+					setEmpresa((prev) => {
+						return prev.concat(listaEmpresas);
+					});
+					if (result.length < maxItems) {
+						setHasMore(false);
+					} else if (
+						document.body.clientHeight <= window.innerHeight
+					) {
+						retrieveMore(lastItem);
+					}
+				} else {
+					setHasMore(false);
+				}
+			});
+	};
+
+	return (
+		<Fragment>
+			<SearchBar setName={setNombre} />
+			<Container style={{ minWidth: "90%" }}>
+				<InfiniteScroll
+					dataLength={empresas.length}
+					next={() => {
+						retrieveMore(lastItem);
+					}}
+					hasMore={hasMore}
+					loader={
+						<div className='loader' key={0}>
+							loading...
+						</div>
+					}
+				>
+					<CardDeck style={{ width: "100%", margin: "0px" }}>
+						{empresas}
+					</CardDeck>
+				</InfiniteScroll>
+			</Container>
+		</Fragment>
+	);
 };
 
 export default Empresas;
-

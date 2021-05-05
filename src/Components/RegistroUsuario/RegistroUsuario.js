@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useRef } from "react";
 import { FirebaseContext } from "../../API/index";
 import { Form, Button, Row, Col } from "react-bootstrap";
 // import mty from "../../images/mty.jpg";y
@@ -10,33 +10,38 @@ import { useHistory } from "react-router";
 
 const RegistroUsuario = () => {
 	const firebase = useContext(FirebaseContext);
-	const [item, setItem] = useState({
-		correo: "",
-		password: "",
-		conf_pswd: "",
-	});
+	const emailRef = useRef();
+	const passwordRef = useRef();
+	const confPswdRef = useRef();
 	const { fetchCurrentUser } = useContext(CurrentUserContext);
 	const history = useHistory();
 
 	const submitChanges = async (event) => {
 		event.preventDefault();
+		const email = emailRef.current.value;
+		const password = passwordRef.current.value;
+		const conf_pswd = confPswdRef.current.value;
 		let message = "Se ha registrado exitosamente!";
-		if (item.password !== item.conf_pswd) {
+		if (password !== conf_pswd) {
 			message = "Las contraseñas no son iguales!";
 			window.alert(message);
 		} else {
 			try {
 				firebase
-					.createNewUser(item.correo, item.password)
-					.then((cred) => {
-						firebase.signInWithUserAndPassword(
-							item.correo,
-							item.password
-						);
-						fetchCurrentUser();
-						history.push("/");
-						console.log(cred);
-						window.alert(message);
+					.createNewUser(email, password)
+					.then(() => {
+						firebase
+							.signInWithUserAndPassword(email, password)
+							.then(() => {
+								fetchCurrentUser();
+							})
+							.catch(() => {
+								message = "Ocurrio un error al iniciar sesión";
+							})
+							.finally(() => {
+								history.push("/");
+								window.alert(message);
+							});
 					})
 					.catch((error) => {
 						console.log(error);
@@ -78,12 +83,7 @@ const RegistroUsuario = () => {
 								<Form.Control
 									className='formControl'
 									placeholder='Correo'
-									onChange={(str) => {
-										setItem({
-											...item,
-											correo: str.currentTarget.value,
-										});
-									}}
+									ref={emailRef}
 								/>
 							</Form.Group>
 
@@ -93,12 +93,7 @@ const RegistroUsuario = () => {
 									className='formControl'
 									placeholder='Contraseña'
 									type='password'
-									onChange={(str) => {
-										setItem({
-											...item,
-											password: str.currentTarget.value,
-										});
-									}}
+									ref={passwordRef}
 								/>
 							</Form.Group>
 
@@ -108,12 +103,7 @@ const RegistroUsuario = () => {
 									className='formControl'
 									placeholder='Confirmar Contraseña'
 									type='password'
-									onChange={(str) => {
-										setItem({
-											...item,
-											conf_pswd: str.currentTarget.value,
-										});
-									}}
+									ref={confPswdRef}
 								/>
 							</Form.Group>
 

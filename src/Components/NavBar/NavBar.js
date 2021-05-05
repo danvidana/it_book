@@ -12,6 +12,40 @@ const NavBar = () => {
 	const { currentUser, fetchCurrentUser } = React.useContext(
 		CurrentUserContext
 	);
+	let adminPanel = null;
+	let signedIn = (
+		<Fragment>
+			<Nav.Link as={Link} to='/registrar-usuario'>
+				Registrarse
+			</Nav.Link>
+			<Nav.Link as={Link} to='/login'>
+				Iniciar Sesión
+			</Nav.Link>
+		</Fragment>
+	);
+
+	if (currentUser !== null) {
+		signedIn = (
+			<Nav.Link
+				as={Link}
+				to='/'
+				onClick={() => {
+					console.log(currentUser);
+					firebase.signout();
+					fetchCurrentUser();
+				}}
+			>
+				Cerrar Sesión
+			</Nav.Link>
+		);
+		if (currentUser.isAdmin === "true") {
+			adminPanel = (
+				<Nav.Link as={Link} to='/admin-panel'>
+					Admin Panel
+				</Nav.Link>
+			);
+		}
+	}
 	return (
 		<Navbar expand='lg' bg='dark' variant='dark'>
 			<Navbar.Brand as={Link} to='/'>
@@ -29,67 +63,8 @@ const NavBar = () => {
 					<Nav.Link as={Link} to={{pathname: "https://www.csoftmty.org/"}} target="_blank">
 						CSOFTMTY
 					</Nav.Link>
-					{currentUser !== null && currentUser.isAdmin === "true" ? (
-						<Nav.Link as={Link} to='/admin-panel'>
-							Admin Panel
-						</Nav.Link>
-					) : null}
-					{currentUser !== null ? (
-						<Fragment>
-							<NavDropdown 
-								title={
-									<img id="user-image" 
-										src={usericon} 
-										alt="user"
-										width="30"
-										height="30"
-									/>
-								} 
-								id="nav-dropdown"
-								alignRight
-							>
-								<NavDropdown.Item as={Link} to="/registrar-empresa">Registrar Empresa</NavDropdown.Item>
-								<NavDropdown.Item 
-									as={Link}
-									to='/'
-									onClick={() => {
-										console.log(currentUser);
-										firebase.signout();
-										fetchCurrentUser();
-									}}
-								>
-									Cerrar Sesión
-								</NavDropdown.Item>
-							</NavDropdown>
-
-							{/* <Nav.Link as={Link} to='/registrar-empresa'>
-								Registrar Empresa
-							</Nav.Link>
-
-							<Nav.Link
-								as={Link}
-								to='/'
-								onClick={() => {
-									console.log(currentUser);
-									firebase.signout();
-									fetchCurrentUser();
-								}}
-							>
-								Cerrar Sesión
-							</Nav.Link> */}
-
-						</Fragment>
-						
-					) : (
-						<Fragment>
-							<Nav.Link as={Link} to='/registrar-usuario'>
-								Registrarse
-							</Nav.Link>
-							<Nav.Link as={Link} to='/login'>
-								Iniciar Sesión
-							</Nav.Link>
-						</Fragment>
-					)}
+					{adminPanel}
+					{signedIn}
 				</Nav>
 			</Navbar.Collapse>
 		</Navbar>
