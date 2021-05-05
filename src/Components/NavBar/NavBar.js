@@ -11,6 +11,40 @@ const NavBar = () => {
 	const { currentUser, fetchCurrentUser } = React.useContext(
 		CurrentUserContext
 	);
+	let adminPanel = null;
+	let signedIn = (
+		<Fragment>
+			<Nav.Link as={Link} to='/registrar-usuario'>
+				Registrarse
+			</Nav.Link>
+			<Nav.Link as={Link} to='/login'>
+				Iniciar Sesión
+			</Nav.Link>
+		</Fragment>
+	);
+
+	if (currentUser !== null) {
+		signedIn = (
+			<Nav.Link
+				as={Link}
+				to='/'
+				onClick={() => {
+					console.log(currentUser);
+					firebase.signout();
+					fetchCurrentUser();
+				}}
+			>
+				Cerrar Sesión
+			</Nav.Link>
+		);
+		if (currentUser.isAdmin === "true") {
+			adminPanel = (
+				<Nav.Link as={Link} to='/admin-panel'>
+					Admin Panel
+				</Nav.Link>
+			);
+		}
+	}
 	return (
 		<Navbar expand='lg' bg='dark' variant='dark'>
 			<Navbar.Brand as={Link} to='/'>
@@ -31,33 +65,8 @@ const NavBar = () => {
 					<Nav.Link as={Link} to='/csoft-mty'>
 						CSOFTMTY
 					</Nav.Link>
-					{currentUser !== null && currentUser.isAdmin === "true" ? (
-						<Nav.Link as={Link} to='/admin-panel'>
-							Admin Panel
-						</Nav.Link>
-					) : null}
-					{currentUser !== null ? (
-						<Nav.Link
-							as={Link}
-							to='/'
-							onClick={() => {
-								console.log(currentUser);
-								firebase.signout();
-								fetchCurrentUser();
-							}}
-						>
-							Cerrar Sesión
-						</Nav.Link>
-					) : (
-						<Fragment>
-							<Nav.Link as={Link} to='/registrar-usuario'>
-								Registrarse
-							</Nav.Link>
-							<Nav.Link as={Link} to='/login'>
-								Iniciar Sesión
-							</Nav.Link>
-						</Fragment>
-					)}
+					{adminPanel}
+					{signedIn}
 				</Nav>
 			</Navbar.Collapse>
 		</Navbar>
