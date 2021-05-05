@@ -2,7 +2,7 @@
 #registro {
     justify-content: center;
     /* margin: 20px; */
-    background-image: url("../../images/mty.jpg");
+    background-image: url("../../images/mty.png");
     background-color: #cccccc; /* Used if the image is unavailable */
     height: 100vh; /*You must set a specified height */
     background-position: center; /* Center the image */
@@ -38,7 +38,7 @@
 #cajaRegistro {
     max-width: 550px;
     margin: 0 auto;
-    background-color: rgba(229, 229, 236, 0.8);
+    background-color: rgba(229, 229, 236, 0.65);
     border-color: rgb(182, 182, 187) !important; 
     color: #f05d29;
     padding-bottom: 40px;

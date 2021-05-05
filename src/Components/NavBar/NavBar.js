@@ -26,17 +26,31 @@ const NavBar = () => {
 
 	if (currentUser !== null) {
 		signedIn = (
-			<Nav.Link
-				as={Link}
-				to='/'
-				onClick={() => {
-					console.log(currentUser);
-					firebase.signout();
-					fetchCurrentUser();
-				}}
+			<NavDropdown 
+				title={
+					<img id="user-image" 
+						src={usericon} 
+						alt="user"
+						width="25"
+						height="25"
+					/>
+				} 
+				id="nav-dropdown"
+				alignRight
 			>
-				Cerrar Sesión
-			</Nav.Link>
+				<NavDropdown.Item as={Link} to="/registrar-empresa">Registrar Empresa</NavDropdown.Item>
+				<NavDropdown.Item 
+					as={Link}
+					to='/'
+					onClick={() => {
+						console.log(currentUser);
+						firebase.signout();
+						fetchCurrentUser();
+					}}
+				>
+					Cerrar Sesión
+				</NavDropdown.Item>
+			</NavDropdown>
 		);
 		if (currentUser.isAdmin === "true") {
 			adminPanel = (

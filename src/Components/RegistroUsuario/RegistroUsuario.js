@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from "react";
 import { FirebaseContext } from "../../API/index";
 import { Form, Button, Row, Col } from "react-bootstrap";
-// import mty from "../../images/mty.jpg";y
+// import mty from "../../images/mty.jpg";
 import "./RegistroUsuario.css";
 import { CurrentUserContext } from "../../CurrentUserContext";
 import { useHistory } from "react-router";

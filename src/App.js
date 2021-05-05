@@ -40,6 +40,10 @@ const App = () => {
 					<Route path='/empresa/:id'>
 						<DetalleEmpresa datosEmpresa={empresa} />
 					</Route>
+
+					<Route path='/quienes-somos'>
+						<QuienesSomos />
+					</Route>
 				</div>
 			</BrowserRouter>
 		</CurrentUserProvider>
