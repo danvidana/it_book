@@ -9,8 +9,11 @@ const Empresa = (props) => {
 			<Card
 				style={{ width: "18rem", height: "16rem", margin: "0px auto" }}
 			>
+				<Card.Header style={{borderColor: "#f05d29", backgroundColor: "#f05d29", color: "#ffffff"}}>
+					{props.empresa.nombre_comercial}
+				</Card.Header>
 				<Card.Body>
-					<Card.Title>{props.empresa.nombre_comercial}</Card.Title>
+					{/* <Card.Title>{props.empresa.nombre_comercial}</Card.Title> */}
 					<Card.Subtitle className='mb-2 text-muted'>
 						{props.empresa.flexGrowgiro}
 					</Card.Subtitle>

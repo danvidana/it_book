@@ -1,7 +1,7 @@
 import React, { useContext, useRef } from "react";
 import { FirebaseContext } from "../../API/index";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import mty from "../../images/mty.jpg";
+// import mty from "../../images/mty.jpg";
 import "./RegistroUsuario.css";
 import { CurrentUserContext } from "../../CurrentUserContext";
 import { useHistory } from "react-router";
@@ -73,7 +73,8 @@ const RegistroUsuario = () => {
 	return (
 		<div id='registro' className='justify-content-center'>
 			<Row id='row-registro'>
-				<Col sm={5} md={5} id='col-registro'>
+				<Col sm={2} md={3}></Col>
+				<Col sm={8} md={6} id='col-registro'>
 					<div id='cajaRegistro'>
 						<h3 style={{ paddingTop: "10px" }}>Registro</h3>
 						<Form id='registroForm' onSubmit={submitChanges}>
@@ -117,10 +118,11 @@ const RegistroUsuario = () => {
 						</Form>
 					</div>
 				</Col>
-
-				<Col sm={7} md={7} id='col-registro-image'>
+				
+				<Col sm={2} md={3}></Col>
+				{/* <Col sm={7} md={7} id='col-registro-image'>
 					<img id='mty-image' src={mty} alt='monterrey' />
-				</Col>
+				</Col> */}
 			</Row>
 		</div>
 	);

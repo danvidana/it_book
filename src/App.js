@@ -8,6 +8,7 @@ import Login from "./Components/Login/Login";
 import { BrowserRouter, Route } from "react-router-dom";
 import { CurrentUserProvider } from "./CurrentUserContext";
 import DetalleEmpresa from "./Components/DetalleEmpresa/DetalleEmpresa";
+import QuienesSomos from "./Components/QuienesSomos/QuienesSomos";
 
 const App = () => {
 	const [empresa, setEmpresa] = useState({});
@@ -38,6 +39,10 @@ const App = () => {
 
 					<Route path='/empresa/:id'>
 						<DetalleEmpresa datosEmpresa={empresa} />
+					</Route>
+
+					<Route path='/quienes-somos'>
+						<QuienesSomos />
 					</Route>
 				</div>
 			</BrowserRouter>
