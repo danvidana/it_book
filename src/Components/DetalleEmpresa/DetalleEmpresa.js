@@ -68,7 +68,7 @@ const DetalleEmpresa = (props) => {
 						</Row>
 						<Row className="text-left row_contacto">
 							<Col className="row_descripcion">
-								Dirección
+								Dirección:
 							</Col>
 							<Col>
 								{props.datosEmpresa.domicilio}, {props.datosEmpresa.colonia}, {props.datosEmpresa.municipio} 
