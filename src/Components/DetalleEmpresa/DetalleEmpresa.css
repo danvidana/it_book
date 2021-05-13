@@ -1,3 +1,28 @@
 .imgBorder {
-    border: #f05d29 solid 1em;
+    border: #f05d29 solid 0.2em;
+}
+
+.detalleEmpresa_wrapper {
+    width: 100%;
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+hr {
+    border-top: 1px solid #212529 !important;
+}
+
+.row_contacto .col {
+    padding: 0%;
+}
+
+.row_contacto .row_descripcion {
+    color: #f05d29;
+    font-weight: 500;
+}
+
+.btn-it-book {
+    color: #fff !important;
+    background-color: #f05d29 !important;
+    border-color: #f05d29 !important;
 }
