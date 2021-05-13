@@ -42,7 +42,7 @@ const FormEmpresa = (props) => {
 		React.useContext(CurrentUserContext);
 	const history = useHistory();
 
-	if (currentUser === null || currentUser === undefined) {
+	if (currentUser === null && currentUser === undefined) {
 		history.push("/");
 	} else if (currentUser.userData.hasEmpresa) {
 		history.push("/");
