@@ -28,6 +28,47 @@ class Firebase {
 		return this.auth.createUserWithEmailAndPassword(email, password);
 	};
 
+	createNewUserData = async (uid, email) => {
+		return this.firestore.collection("user").doc(uid).set({
+			email: email,
+			empresaID: "",
+			hasEmpresa: false,
+			isAdmin: false,
+			isSubadmin: false,
+		});
+	};
+
+	removeSubadmin = async (uid) => {
+		return this.firestore.collection("user").doc(uid).update({
+			isSubadmin: false,
+		});
+	};
+
+	makeSubadmin = async (uid) => {
+		return this.firestore.collection("user").doc(uid).update({
+			isSubadmin: true,
+		});
+	};
+
+	setHasEmpresa = async (uid, hasEmpresa, empresaID = "") => {
+		return this.firestore.collection("user").doc(uid).update({
+			hasEmpresa: hasEmpresa,
+			empresaID: empresaID,
+		});
+	};
+
+	getNonAdminUsers = async () => {
+		var users = await this.firestore
+			.collection("user")
+			.where("isAdmin", "==", false)
+			.get();
+		return users.docs.map((doc) => {
+			var data = doc.data();
+			data.id = doc.id;
+			return data;
+		});
+	};
+
 	signInWithCredential = async (credential) => {
 		return this.auth.signInWithCredential(credential);
 	};
@@ -110,11 +151,7 @@ class Firebase {
 	};
 
 	addEmpresa = async (empresa) => {
-		await this.firestore.collection("Empresas").add(empresa);
-	};
-
-	isAdminUser = async (email) => {
-		await this.firestore.collection("adminUsers").doc(email);
+		return this.firestore.collection("Empresas").add(empresa);
 	};
 }
 
