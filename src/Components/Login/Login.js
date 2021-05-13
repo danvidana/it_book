@@ -16,7 +16,6 @@ const Login = () => {
 	const passwordRef = useRef();
 
 	if (currentUser !== null && currentUser !== undefined) {
-		console.log(currentUser);
 		history.push("/");
 	}
 
