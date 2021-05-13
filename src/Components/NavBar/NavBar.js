@@ -1,4 +1,4 @@
-import React, { Fragment, useContext } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { FirebaseContext } from "../../API";
@@ -9,11 +9,11 @@ import usericon from "../../images/user-icon.png";
 
 const NavBar = () => {
 	const firebase = useContext(FirebaseContext);
-	const { currentUser, fetchCurrentUser } = React.useContext(
-		CurrentUserContext
-	);
-	let adminPanel = null;
-	let signedIn = (
+	const { currentUser, fetchCurrentUser } =
+		React.useContext(CurrentUserContext);
+
+	const [adminPanel, setAdminPanel] = useState(null);
+	const [signedIn, setSignedIn] = useState(
 		<Fragment>
 			<Nav.Link as={Link} to='/registrar-usuario'>
 				Registrarse
@@ -23,43 +23,65 @@ const NavBar = () => {
 			</Nav.Link>
 		</Fragment>
 	);
-
-	if (currentUser !== null) {
-		signedIn = (
-			<NavDropdown 
-				title={
-					<img id="user-image" 
-						src={usericon} 
-						alt="user"
-						width="25"
-						height="25"
-					/>
-				} 
-				id="nav-dropdown"
-				alignRight
-			>
-				<NavDropdown.Item as={Link} to="/registrar-empresa">Registrar Empresa</NavDropdown.Item>
-				<NavDropdown.Item 
-					as={Link}
-					to='/'
-					onClick={() => {
-						console.log(currentUser);
-						firebase.signout();
-						fetchCurrentUser();
-					}}
+	useEffect(() => {
+		if (currentUser !== null) {
+			setSignedIn(
+				<NavDropdown
+					title={
+						<img
+							id='user-image'
+							src={usericon}
+							alt='user'
+							width='25'
+							height='25'
+						/>
+					}
+					id='nav-dropdown'
+					alignRight
 				>
-					Cerrar Sesión
-				</NavDropdown.Item>
-			</NavDropdown>
-		);
-		if (currentUser.isAdmin === "true") {
-			adminPanel = (
-				<Nav.Link as={Link} to='/admin-panel'>
-					Admin Panel
-				</Nav.Link>
+					{currentUser.userData.hasEmpresa ? null : (
+						<NavDropdown.Item as={Link} to='/registrar-empresa'>
+							Registrar Empresa
+						</NavDropdown.Item>
+					)}
+					<NavDropdown.Item
+						as={Link}
+						to='/'
+						onClick={() => {
+							console.log(currentUser);
+							firebase.signout();
+							fetchCurrentUser();
+						}}
+					>
+						Cerrar Sesión
+					</NavDropdown.Item>
+				</NavDropdown>
+			);
+			if (currentUser.userData !== undefined) {
+				if (currentUser.userData.isAdmin) {
+					setAdminPanel(
+						<Nav.Link as={Link} to='/admin-panel'>
+							Admin Panel
+						</Nav.Link>
+					);
+				} else {
+					setAdminPanel(null);
+				}
+			}
+		} else {
+			setSignedIn(
+				<Fragment>
+					<Nav.Link as={Link} to='/registrar-usuario'>
+						Registrarse
+					</Nav.Link>
+					<Nav.Link as={Link} to='/login'>
+						Iniciar Sesión
+					</Nav.Link>
+				</Fragment>
 			);
 		}
-	}
+	}, [currentUser, fetchCurrentUser, firebase]);
+
 	return (
 		<Navbar expand='lg' bg='dark' variant='dark'>
 			<Navbar.Brand as={Link} to='/'>
@@ -74,7 +96,11 @@ const NavBar = () => {
 					<Nav.Link as={Link} to='/quienes-somos'>
 						¿Quienes somos?
 					</Nav.Link>
-					<Nav.Link as={Link} to={{pathname: "https://www.csoftmty.org/"}} target="_blank">
+					<Nav.Link
+						as={Link}
+						to={{ pathname: "https://www.csoftmty.org/" }}
+						target='_blank'
+					>
 						CSOFTMTY
 					</Nav.Link>
 					{adminPanel}

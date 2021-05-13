@@ -7,7 +7,7 @@ export const CurrentUserProvider = ({ children }) => {
 	const firebase = useContext(FirebaseContext);
 	var tempUser = JSON.parse(localStorage.getItem("authUser"));
 	if (tempUser !== null) {
-		tempUser["isAdmin"] = localStorage.getItem("isAdmin");
+		tempUser["userData"] = JSON.parse(localStorage.getItem("userData"));
 	}
 	const [currentUser, setCurrentUser] = React.useState(tempUser);
 
@@ -17,29 +17,28 @@ export const CurrentUserProvider = ({ children }) => {
 			.then((user) => {
 				if (user !== null) {
 					localStorage.setItem("authUser", JSON.stringify(user));
-					localStorage.setItem("isAdmin", false);
 					firebase.firestore
-						.collection("adminUsers")
-						.doc(user.email)
+						.collection("user")
+						.doc(user.uid)
 						.get()
 						.then((doc) => {
-							if (doc.exists) {
-								localStorage.setItem("isAdmin", true);
-							} else {
-								console.log(doc);
-								localStorage.setItem("isAdmin", false);
-							}
+							console.log(doc.data());
+							var data = doc.data();
+							localStorage.setItem(
+								"userData",
+								JSON.stringify(data)
+							);
 						})
 						.catch(() => {
-							localStorage.setItem("isAdmin", false);
+							throw new Error("Could not get user data");
 						})
 						.finally(() => {
 							tempUser = JSON.parse(
 								localStorage.getItem("authUser")
 							);
 							if (tempUser !== null) {
-								tempUser["isAdmin"] = localStorage.getItem(
-									"isAdmin"
+								tempUser["userData"] = JSON.parse(
+									localStorage.getItem("userData")
 								);
 							}
 							setCurrentUser(tempUser);
@@ -49,7 +48,7 @@ export const CurrentUserProvider = ({ children }) => {
 			})
 			.catch((e) => {
 				localStorage.removeItem("authUser");
-				localStorage.removeItem("isAdmin");
+				localStorage.removeItem("userData");
 				setCurrentUser(null);
 			});
 	};
