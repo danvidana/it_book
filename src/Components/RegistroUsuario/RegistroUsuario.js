@@ -13,8 +13,12 @@ const RegistroUsuario = () => {
 	const emailRef = useRef();
 	const passwordRef = useRef();
 	const confPswdRef = useRef();
-	const { fetchCurrentUser } = useContext(CurrentUserContext);
+	const { currentUser, fetchCurrentUser } = useContext(CurrentUserContext);
 	const history = useHistory();
+
+	if (currentUser !== null || currentUser !== undefined) {
+		history.push("/");
+	}
 
 	const submitChanges = async (event) => {
 		event.preventDefault();
@@ -29,18 +33,34 @@ const RegistroUsuario = () => {
 			try {
 				firebase
 					.createNewUser(email, password)
-					.then(() => {
+					.then((userCredential) => {
 						firebase
-							.signInWithUserAndPassword(email, password)
+							.createNewUserData(userCredential.user.uid, email)
 							.then(() => {
-								fetchCurrentUser();
+								firebase
+									.signInWithUserAndPassword(email, password)
+									.then(() => {
+										fetchCurrentUser();
+									})
+									.catch(() => {
+										message =
+											"Ocurrio un error al iniciar sesión";
+									})
+									.finally(() => {
+										history.push("/");
+										window.alert(message);
+									});
 							})
 							.catch(() => {
-								message = "Ocurrio un error al iniciar sesión";
-							})
-							.finally(() => {
-								history.push("/");
-								window.alert(message);
+								firebase
+									.signInWithUserAndPassword(email, password)
+									.finally(() => {
+										userCredential.user.delete();
+										history.push("/");
+										window.alert(
+											"Error al crear datos de usuario"
+										);
+									});
 							});
 					})
 					.catch((error) => {
@@ -118,7 +138,7 @@ const RegistroUsuario = () => {
 						</Form>
 					</div>
 				</Col>
-				
+
 				<Col sm={2} md={3}></Col>
 				{/* <Col sm={7} md={7} id='col-registro-image'>
 					<img id='mty-image' src={mty} alt='monterrey' />

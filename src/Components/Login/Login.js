@@ -10,10 +10,14 @@ import { CurrentUserContext } from "../../CurrentUserContext";
 
 const Login = () => {
 	const firebase = useContext(FirebaseContext);
-	const { fetchCurrentUser } = useContext(CurrentUserContext);
+	const { currentUser, fetchCurrentUser } = useContext(CurrentUserContext);
 	const history = useHistory();
 	const emailRef = useRef();
 	const passwordRef = useRef();
+
+	if (currentUser !== null || currentUser !== undefined) {
+		history.push("/");
+	}
 
 	const submitChanges = async (event) => {
 		event.preventDefault();
@@ -146,7 +150,7 @@ const Login = () => {
 						</Form>
 					</div>
 				</Col>
-				
+
 				<Col sm={2} md={3}></Col>
 				{/* <Col sm={7} md={7} id='col-login-image'>
 					<img id='mty-image' src={mty} alt='monterrey' />

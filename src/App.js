@@ -9,6 +9,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { CurrentUserProvider } from "./CurrentUserContext";
 import DetalleEmpresa from "./Components/DetalleEmpresa/DetalleEmpresa";
 import QuienesSomos from "./Components/QuienesSomos/QuienesSomos";
+import AdminPanel from "./Components/AdminPanel/AdminPanel";
 
 const App = () => {
 	const [empresa, setEmpresa] = useState({});
@@ -43,6 +44,10 @@ const App = () => {
 
 					<Route path='/quienes-somos'>
 						<QuienesSomos />
+					</Route>
+
+					<Route path='/admin-panel'>
+						<AdminPanel />
 					</Route>
 				</div>
 			</BrowserRouter>

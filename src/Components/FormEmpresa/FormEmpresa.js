@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
 import { FirebaseContext } from "../../API/index";
 import { Form, Button } from "react-bootstrap";
+import { CurrentUserContext } from "../../CurrentUserContext";
 import "./FormEmpresa.css";
+import { useHistory } from "react-router";
 
 // Componente del formulario para dar de alta una empresa
 
-const FormEmpresa = () => {
+const FormEmpresa = (props) => {
 	const firebase = useContext(FirebaseContext);
 	const [item, setItem] = useState({
 		nombre_comercial: "",
@@ -36,24 +38,35 @@ const FormEmpresa = () => {
 		num_cert_emp: 0,
 	});
 	const [validated, setValidated] = useState(false);
+	const { currentUser, fetchCurrentUser } =
+		React.useContext(CurrentUserContext);
+	const history = useHistory();
 
+	if (currentUser === null || currentUser === undefined) {
+		history.push("/");
+	} else if (currentUser.userData.hasEmpresa) {
+		history.push("/");
+	}
 	// función para subir cambios a la base de datos
 	const submitChanges = async (event) => {
 		event.preventDefault();
 		let message = "Se ha subido la empresa";
 		const form = event.currentTarget;
-		
+
 		try {
 			// Verifica que ningún campo esté vacío
 			if (form.checkValidity() === false) {
-				console.log(form.checkValidity())
-				message = "Campos sin responder"
+				console.log(form.checkValidity());
+				message = "Campos sin responder";
 				event.stopPropagation();
-			}
-			else{
+			} else {
 				// Añade la empresa a la base de datos
 				const copy = item;
-				await firebase.addEmpresa(copy);
+				firebase.addEmpresa(copy).then((empresa) => {
+					firebase.setHasEmpresa(currentUser.uid, true, empresa.id);
+					fetchCurrentUser();
+					history.push("/");
+				});
 				console.log(copy);
 			}
 		} catch (e) {
@@ -64,18 +77,19 @@ const FormEmpresa = () => {
 		setValidated(true);
 		window.alert(message);
 	};
-	
+
 	return (
-		<div id="formContainer">
-			<Form 
-			id="formEmpresa"
-			noValidate
-			validated={validated}
-			onSubmit={submitChanges}>
+		<div id='formContainer'>
+			<Form
+				id='formEmpresa'
+				noValidate
+				validated={validated}
+				onSubmit={submitChanges}
+			>
 				{/* <h2>IT-BOOK</h2> */}
-				
-				<div style={{paddingBottom:"10px"}}>
-					<h3 style={{color: "#f05d29"}}>Registra tu empresa</h3>
+
+				<div style={{ paddingBottom: "10px" }}>
+					<h3 style={{ color: "#f05d29" }}>Registra tu empresa</h3>
 				</div>
 
 				<h5>Datos Públicos</h5>
@@ -351,7 +365,9 @@ const FormEmpresa = () => {
 				</Form.Group>
 
 				<Form.Group controlId=''>
-					<Form.Label>Número de empleados en Administración</Form.Label>
+					<Form.Label>
+						Número de empleados en Administración
+					</Form.Label>
 					<Form.Control
 						placeholder='Número de empleados en Administración'
 						onChange={(str) => {
@@ -381,7 +397,9 @@ const FormEmpresa = () => {
 				</Form.Group>
 
 				<Form.Group controlId=''>
-					<Form.Label>Porcentaje de ventas en el extranjero</Form.Label>
+					<Form.Label>
+						Porcentaje de ventas en el extranjero
+					</Form.Label>
 					<Form.Control
 						placeholder='Porcentaje de ventas en el extranjero'
 						onChange={(str) => {
@@ -397,7 +415,9 @@ const FormEmpresa = () => {
 				</Form.Group>
 
 				<Form.Group controlId=''>
-					<Form.Label>¿A qué países exporta principalmente?</Form.Label>
+					<Form.Label>
+						¿A qué países exporta principalmente?
+					</Form.Label>
 					<Form.Control
 						placeholder='¿A qué países exporta principalmente?'
 						onChange={(str) => {
@@ -417,7 +437,9 @@ const FormEmpresa = () => {
 						onChange={(str) => {
 							setItem({
 								...item,
-								ventas_anuales: parseFloat(str.currentTarget.value),
+								ventas_anuales: parseFloat(
+									str.currentTarget.value
+								),
 							});
 						}}
 						required
@@ -433,7 +455,7 @@ const FormEmpresa = () => {
 						onChange={(str) => {
 							setItem({
 								...item,
-								certificaciones: parseInt(str.currentTarget.value),
+								certificaciones: str.currentTarget.value,
 							});
 						}}
 						required
@@ -442,7 +464,8 @@ const FormEmpresa = () => {
 
 				<Form.Group controlId=''>
 					<Form.Label>
-						Número de certificaciones con las que cuentan sus empleados
+						Número de certificaciones con las que cuentan sus
+						empleados
 					</Form.Label>
 					<Form.Control
 						placeholder='Número de certificaciones con las que cuentan sus empleados'
@@ -456,7 +479,12 @@ const FormEmpresa = () => {
 					/>
 				</Form.Group>
 
-				<Button id="btn-submitForm" className='btn-submit' variant='primary' type='submit'>
+				<Button
+					id='btn-submitForm'
+					className='btn-submit'
+					variant='primary'
+					type='submit'
+				>
 					Guardar
 				</Button>
 			</Form>
