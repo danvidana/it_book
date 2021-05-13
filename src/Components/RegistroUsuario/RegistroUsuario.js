@@ -16,7 +16,7 @@ const RegistroUsuario = () => {
 	const { currentUser, fetchCurrentUser } = useContext(CurrentUserContext);
 	const history = useHistory();
 
-	if (currentUser !== null || currentUser !== undefined) {
+	if (currentUser !== null && currentUser !== undefined) {
 		history.push("/");
 	}
 
