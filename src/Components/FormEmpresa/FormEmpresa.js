@@ -5,7 +5,6 @@ import { CurrentUserContext } from "../../CurrentUserContext";
 import "./FormEmpresa.css";
 import { useHistory } from "react-router";
 import MultiSelect from "react-multi-select-component";
-import countryList from 'react-select-country-list'
 
 // Componente del formulario para dar de alta una empresa
 
@@ -152,53 +151,9 @@ const FormEmpresa = (props) => {
 		React.useContext(CurrentUserContext);
 	const history = useHistory();
 
+	// Area
 	const [area, setArea] = useState({"index": -1})
 	const [selectvalue, setSelectvalue] = useState("")
-
-	// lista de paises
-	const options = useMemo(() => countryList().getData(), [])
-	const [arrayCountries, setArrayCountries] = useState([])
-
-	const [image, setImage] = useState(null);
-
-	function handleImageUpload() {
-		var storage = firebase.storage;
-		const uploadTask = storage.ref(`/images/${image.name}`).put(image);
-		uploadTask.on(
-			"state_changed", console.log, console.error, 
-			() => {
-				storage
-					.ref("images")
-					.child(image.name)
-					.getDownloadURL()
-					.then((url) => {
-					// setImage(null);
-					setItem({
-						...item,
-						logo: url
-					});
-					});
-			}
-		);
-	}
-
-	const handleImageChange = (e) =>  {
-		let img = e.target.files[0]
-		setImage(img);
-		console.log(img)
-		handleImageUpload()
-	}
-
-	// guarda en un arreglo los países seleccionados
-	const handleChangeCountries = (selectedOptions) => {
-		setArrayCountries(selectedOptions)
-		console.log(arrayCountries)
-
-		setItem({
-			...item,
-			paises_exp_princ: selectedOptions
-		});
-	}
 
 	// regresa las opciones areas
 	const getAreas = function () {
@@ -242,6 +197,84 @@ const FormEmpresa = (props) => {
 		});
 	}
 
+	
+	// lista de paises
+	const searchURL = 'https://restcountries.eu/rest/v2/all';
+
+	const [arrayCountries, setArrayCountries] = useState([])
+	var dict_countries = [];
+
+	async function getCountries() {
+		const url = searchURL;
+		const response = await fetch(url);
+		const responseData = await response.json();
+
+		// console.log(responseData);
+
+		 // create an empty array
+		Object.entries(responseData).map(function([index, key]) {
+			if(key["translations"]["es"] !== null){
+				dict_countries.push({
+					"label": key["translations"]["es"],
+					"value": key["translations"]["es"]
+				});
+			} else {
+				dict_countries.push({
+					"label": key["name"],
+					"value": key["name"]
+				});
+			}
+			
+		})
+		// console.log(dict_countries)
+		// return dict_countries
+	}
+
+	getCountries()
+
+	const options = useMemo(() => dict_countries, [])
+
+	// guarda en un arreglo los países seleccionados
+	const handleChangeCountries = (selectedOptions) => {
+		setArrayCountries(selectedOptions)
+		setItem({
+			...item,
+			paises_exp_princ: selectedOptions
+		});
+	}
+
+	// Imagen logo
+	const [image, setImage] = useState(null);
+
+	// Sube la imagen a firebase
+	function handleImageUpload() {
+		var storage = firebase.storage;
+		const uploadTask = storage.ref(`/images/${image.name}`).put(image);
+		uploadTask.on(
+			"state_changed", console.log, console.error, 
+			() => {
+				storage
+					.ref("images")
+					.child(image.name)
+					.getDownloadURL()
+					.then((url) => {
+					// setImage(null);
+					setItem({
+						...item,
+						logo: url
+					});
+					});
+			}
+		);
+	}
+	
+	const handleImageChange = (e) =>  {
+		let img = e.target.files[0]
+		setImage(img);
+		// console.log(img)
+		handleImageUpload()
+	}
+
 	// regresa las opciones de numeros de empleados
 	const getNumEmpleados = function () {
 		return [
@@ -279,7 +312,6 @@ const FormEmpresa = (props) => {
 	} else if (currentUser.userData.hasEmpresa) {
 		history.push("/");
 	}
-
 
 	// función para subir cambios a la base de datos
 	const submitChanges = async (event) => {
@@ -481,13 +513,10 @@ const FormEmpresa = (props) => {
 								type="text"
 								pattern="[0-9]{5}"
 								onChange={(str) => {
-
-									if (/^[0-9]{5}$/.test(str.target.value)) {
-										setItem({
-											...item,
-											cp: parseInt(str.currentTarget.value),
-										});
-									}
+									setItem({
+										...item,
+										cp: parseInt(str.currentTarget.value),
+									});
 								}}
 								required
 							/>
@@ -503,13 +532,10 @@ const FormEmpresa = (props) => {
 								type="text"
 								pattern="[0-9]{10}"
 								onChange={(str) => {
-
-									if (/^[0-9]{10}$/.test(str.target.value)) {
-										setItem({
-											...item,
-											telefono: parseInt(str.currentTarget.value),
-										});
-									}
+									setItem({
+										...item,
+										telefono: parseInt(str.currentTarget.value),
+									});
 								}}
 								required
 							/>
@@ -547,15 +573,10 @@ const FormEmpresa = (props) => {
 								type="url"
 								pattern="^(?:http(s)?:\/\/)[\w.-]+(?:\.[\w\.-]+)+\.[\w\-_~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
 								onChange={(str) => {
-									let urlRegex = /^(?:http(s)?:\/\/)[\w.-]+(?:\.[\w\.-]+)+\.[\w\-_~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/;
-
-									if (urlRegex.test(str.target.value)) {
-										console.log("valid url")
-										setItem({
-											...item,
-											pagina_web: str.currentTarget.value,
-										});
-									}
+									setItem({
+										...item,
+										pagina_web: str.currentTarget.value,
+									});
 								}}
 								required
 							/>
@@ -612,13 +633,10 @@ const FormEmpresa = (props) => {
 								type="text"
 								pattern="[0-9]{10}"
 								onChange={(str) => {
-
-									if (/^[0-9]{10}$/.test(str.target.value)) {
-										setItem({
-											...item,
-											tel_ceo: parseInt(str.currentTarget.value),
-										});
-									}
+									setItem({
+										...item,
+										tel_ceo: parseInt(str.currentTarget.value),
+									});
 								}}
 							/>
 							<Form.Text className="text-muted">
@@ -673,13 +691,10 @@ const FormEmpresa = (props) => {
 								type="text"
 								pattern="[0-9]{10}"
 								onChange={(str) => {
-
-									if (/^[0-9]{10}$/.test(str.target.value)) {
-										setItem({
-											...item,
-											tel_cio: parseInt(str.currentTarget.value),
-										});
-									}
+									setItem({
+										...item,
+										tel_cio: parseInt(str.currentTarget.value),
+									});
 								}}
 							/>
 							<Form.Text className="text-muted">
@@ -764,7 +779,7 @@ const FormEmpresa = (props) => {
 							<Form.Text className="text-muted">
 								Opcional
 							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Url no es válido</Form.Control.Feedback>
+							<Form.Control.Feedback type="invalid" >Debe ser un url de LinkedIn</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 
@@ -785,7 +800,7 @@ const FormEmpresa = (props) => {
 							<Form.Text className="text-muted">
 								Opcional
 							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Url no es válido</Form.Control.Feedback>
+							<Form.Control.Feedback type="invalid" >Debe ser un url de Facebook</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 				</Row>
@@ -808,13 +823,13 @@ const FormEmpresa = (props) => {
 							<Form.Text className="text-muted">
 								Opcional
 							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Url no es válido</Form.Control.Feedback>
+							<Form.Control.Feedback type="invalid" >Debe ser un url de Instagram</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 
 					<Col sm={6}>
 						<Form.Group controlId=''>
-							<Form.Label>Youtube</Form.Label>
+							<Form.Label>YouTube</Form.Label>
 							<Form.Control
 								placeholder='Ej. https://www.youtube.com/miempresa'
 								type="url"
@@ -829,7 +844,7 @@ const FormEmpresa = (props) => {
 							<Form.Text className="text-muted">
 								Opcional
 							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Url no es válido</Form.Control.Feedback>
+							<Form.Control.Feedback type="invalid" >Debe ser de YouTube</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 				</Row>
