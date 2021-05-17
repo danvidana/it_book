@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo } from "react";
+import React, { useContext, useState, useMemo, useEffect } from "react";
 import { FirebaseContext } from "../../API/index";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { CurrentUserContext } from "../../CurrentUserContext";
@@ -245,6 +245,7 @@ const FormEmpresa = (props) => {
 
 	// Imagen logo
 	const [image, setImage] = useState(null);
+	const [uploadImg, setUploadImg] = useState(false)
 
 	// Sube la imagen a firebase
 	function handleImageUpload() {
@@ -263,18 +264,34 @@ const FormEmpresa = (props) => {
 						...item,
 						logo: url
 					});
+					setUploadImg(true)
 					});
 			}
 		);
 	}
+
+	useEffect(() => {
+		if (uploadImg) {
+			const copy = item;
+			firebase.addEmpresa(copy).then((empresa) => {
+				firebase.setHasEmpresa(currentUser.uid, true, empresa.id);
+				fetchCurrentUser();
+				history.push("/");
+			});
+			console.log(copy);
+		}
+	  }, [uploadImg]);
+
 	
 	const handleImageChange = (e) =>  {
 		let img = e.target.files[0]
 		setImage(img);
 		// console.log(img)
-		handleImageUpload()
+		// handleImageUpload()
+		
 	}
 
+	
 	// regresa las opciones de numeros de empleados
 	const getNumEmpleados = function () {
 		return [
@@ -330,13 +347,14 @@ const FormEmpresa = (props) => {
 				event.stopPropagation();
 			} else {
 				// Añade la empresa a la base de datos
-				const copy = item;
-				firebase.addEmpresa(copy).then((empresa) => {
-					firebase.setHasEmpresa(currentUser.uid, true, empresa.id);
-					fetchCurrentUser();
-					history.push("/");
-				});
-				console.log(copy);
+				handleImageUpload()
+				// const copy = item;
+				// firebase.addEmpresa(copy).then((empresa) => {
+				// 	firebase.setHasEmpresa(currentUser.uid, true, empresa.id);
+				// 	fetchCurrentUser();
+				// 	history.push("/");
+				// });
+				// console.log(copy);
 			
 			}
 		} catch (e) {
@@ -584,6 +602,112 @@ const FormEmpresa = (props) => {
 						</Form.Group>
 					</Col>
 				</Row>
+
+				<h6>Redes Sociales</h6>
+
+				<p><small>Ingrese las direcciones a las redes sociales que correspondan.</small></p>
+
+				{/* <Form.Group controlId=''>
+					<Form.Label>Redes Sociales</Form.Label>
+					<Form.Control
+						placeholder='Redes Sociales'
+						onChange={(str) => {
+							setItem({
+								...item,
+								redes_sociales: str.currentTarget.value,
+							});
+						}}
+						required
+					/>
+				</Form.Group> */}
+
+				<Row>
+					<Col sm={6}>
+						<Form.Group controlId=''>
+							<Form.Label>LinkedIn</Form.Label>
+							<Form.Control
+								placeholder='Ej. https://www.linkedin.com/company/miempresa/'
+								type="url"
+								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.linkedin.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+								onChange={(str) => {
+									setItem({
+										...item,
+										linkedin: str.currentTarget.value,
+									});
+								}}
+							/>
+							<Form.Text className="text-muted">
+								Opcional
+							</Form.Text>
+							<Form.Control.Feedback type="invalid" >Debe ser un url de LinkedIn (https://www.linkedin.com/)</Form.Control.Feedback>
+						</Form.Group>
+					</Col>
+
+					<Col sm={6}>
+						<Form.Group controlId=''>
+							<Form.Label>Facebook</Form.Label>
+							<Form.Control
+								placeholder='Ej. https://www.facebook.com/miempresa'
+								type="url"
+								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.facebook.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+								onChange={(str) => {
+									setItem({
+										...item,
+										facebook: str.currentTarget.value,
+									});
+								}}
+							/>
+							<Form.Text className="text-muted">
+								Opcional
+							</Form.Text>
+							<Form.Control.Feedback type="invalid" >Debe ser un url de Facebook (https://www.facebook.com/)</Form.Control.Feedback>
+						</Form.Group>
+					</Col>
+				</Row>
+
+				<Row>
+					<Col sm={6}>
+						<Form.Group controlId=''>
+							<Form.Label>Instagram</Form.Label>
+							<Form.Control
+								placeholder='Ej. https://www.instagram.com/miempresa/'
+								type="url"
+								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.instagram.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+								onChange={(str) => {
+									setItem({
+										...item,
+										instagram: str.currentTarget.value,
+									});
+								}}
+							/>
+							<Form.Text className="text-muted">
+								Opcional
+							</Form.Text>
+							<Form.Control.Feedback type="invalid" >Debe ser un url de Instagram (https://www.instagram.com/)</Form.Control.Feedback>
+						</Form.Group>
+					</Col>
+
+					<Col sm={6}>
+						<Form.Group controlId=''>
+							<Form.Label>YouTube</Form.Label>
+							<Form.Control
+								placeholder='Ej. https://www.youtube.com/miempresa'
+								type="url"
+								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.youtube.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
+								onChange={(str) => {
+									setItem({
+										...item,
+										youtube: str.currentTarget.value,
+									});
+								}}
+							/>
+							<Form.Text className="text-muted">
+								Opcional
+							</Form.Text>
+							<Form.Control.Feedback type="invalid" >Debe ser un url de YouTube (https://www.youtube.com/)</Form.Control.Feedback>
+						</Form.Group>
+					</Col>
+				</Row>
 				
 				<br/>
 				<h5>Datos Confidenciales</h5>
@@ -620,8 +744,11 @@ const FormEmpresa = (props) => {
 										email_ceo: str.currentTarget.value,
 									});
 								}}
-								required
+								
 							/>
+							<Form.Text className="text-muted">
+								Opcional
+							</Form.Text>
 						</Form.Group>
 					</Col>
 
@@ -678,8 +805,10 @@ const FormEmpresa = (props) => {
 										email_cio: str.currentTarget.value,
 									});
 								}}
-								required
 							/>
+							<Form.Text className="text-muted">
+								Opcional
+							</Form.Text>
 						</Form.Group>
 					</Col>
 
@@ -739,112 +868,6 @@ const FormEmpresa = (props) => {
 								}}
 								required
 							/>
-						</Form.Group>
-					</Col>
-				</Row>
-
-				<h6>Redes Sociales</h6>
-
-				<p><small>Ingrese las direcciones a las redes sociales que correspondan.</small></p>
-
-				{/* <Form.Group controlId=''>
-					<Form.Label>Redes Sociales</Form.Label>
-					<Form.Control
-						placeholder='Redes Sociales'
-						onChange={(str) => {
-							setItem({
-								...item,
-								redes_sociales: str.currentTarget.value,
-							});
-						}}
-						required
-					/>
-				</Form.Group> */}
-
-				<Row>
-					<Col sm={6}>
-						<Form.Group controlId=''>
-							<Form.Label>LinkedIn</Form.Label>
-							<Form.Control
-								placeholder='Ej. https://www.linkedin.com/company/miempresa/'
-								type="url"
-								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.linkedin.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
-								onChange={(str) => {
-									setItem({
-										...item,
-										linkedin: str.currentTarget.value,
-									});
-								}}
-							/>
-							<Form.Text className="text-muted">
-								Opcional
-							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Debe ser un url de LinkedIn</Form.Control.Feedback>
-						</Form.Group>
-					</Col>
-
-					<Col sm={6}>
-						<Form.Group controlId=''>
-							<Form.Label>Facebook</Form.Label>
-							<Form.Control
-								placeholder='Ej. https://www.facebook.com/miempresa'
-								type="url"
-								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.facebook.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
-								onChange={(str) => {
-									setItem({
-										...item,
-										facebook: str.currentTarget.value,
-									});
-								}}
-							/>
-							<Form.Text className="text-muted">
-								Opcional
-							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Debe ser un url de Facebook</Form.Control.Feedback>
-						</Form.Group>
-					</Col>
-				</Row>
-
-				<Row>
-					<Col sm={6}>
-						<Form.Group controlId=''>
-							<Form.Label>Instagram</Form.Label>
-							<Form.Control
-								placeholder='Ej. https://www.instagram.com/miempresa/'
-								type="url"
-								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.instagram.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
-								onChange={(str) => {
-									setItem({
-										...item,
-										instagram: str.currentTarget.value,
-									});
-								}}
-							/>
-							<Form.Text className="text-muted">
-								Opcional
-							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Debe ser un url de Instagram</Form.Control.Feedback>
-						</Form.Group>
-					</Col>
-
-					<Col sm={6}>
-						<Form.Group controlId=''>
-							<Form.Label>YouTube</Form.Label>
-							<Form.Control
-								placeholder='Ej. https://www.youtube.com/miempresa'
-								type="url"
-								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.youtube.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
-								onChange={(str) => {
-									setItem({
-										...item,
-										youtube: str.currentTarget.value,
-									});
-								}}
-							/>
-							<Form.Text className="text-muted">
-								Opcional
-							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Debe ser de YouTube</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 				</Row>
