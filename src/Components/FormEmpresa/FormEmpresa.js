@@ -1,4 +1,4 @@
-import React, { useContext, useState, useMemo, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { FirebaseContext } from "../../API/index";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { CurrentUserContext } from "../../CurrentUserContext";
@@ -10,6 +10,7 @@ import MultiSelect from "react-multi-select-component";
 
 const FormEmpresa = (props) => {
 	const firebase = useContext(FirebaseContext);
+	const [countries, setCountries] = useState([]);
 	const [item, setItem] = useState({
 		nombre_comercial: "",
 		area: "",
@@ -47,104 +48,101 @@ const FormEmpresa = (props) => {
 		num_cert_empresa: 0,
 		cert_empresa: "",
 		num_cert_empleado: 0,
-		cert_empleado: ""
+		cert_empleado: "",
 	});
 
 	// diccionario de todas las opciones de giros por area
 	const dict_giros = [
 		{
-			"area": "Desarrollo de Software",
-			"giros": [
-				"Desarrollo Web", 
+			area: "Desarrollo de Software",
+			giros: [
+				"Desarrollo Web",
 				"Soluciones Tecnológicas",
-				"Fintech", 
-				"Healthtech", 
-				"E-commerce", 
-				"Desarrollo a la medida"
-			]
+				"Fintech",
+				"Healthtech",
+				"E-commerce",
+				"Desarrollo a la medida",
+			],
 		},
 		{
-			"area": "Servicios",
-			"giros": [
-				"Facturación electrónica", 
-				"Staffing", 
-				"Software as a service", 
-				"Monitoreo de SW & HW", 
-				"Consultoría TIC", 
-				"Asesoría en propiedad intelectual en temas de tecnología", 
-				"Tratamiento de imagen", 
-				"Servicios de Telecomuicaciones", 
-				"Streaming y desarrollo de eventos virtuales"
-			]
+			area: "Servicios",
+			giros: [
+				"Facturación electrónica",
+				"Staffing",
+				"Software as a service",
+				"Monitoreo de SW & HW",
+				"Consultoría TIC",
+				"Asesoría en propiedad intelectual en temas de tecnología",
+				"Tratamiento de imagen",
+				"Servicios de Telecomuicaciones",
+				"Streaming y desarrollo de eventos virtuales",
+			],
 		},
 		{
-			"area": "Hardware",
-			"giros": [
-				"Uso de PLC", 
-				"Redes industriales"
-			]
+			area: "Hardware",
+			giros: ["Uso de PLC", "Redes industriales"],
 		},
 		{
-			"area": "Tecnología 4.0",
-			"giros": [
-				"3D Printing", 
-				"Business Intelligence", 
-				"Big data y Analítica de datos", 
-				"Inteligencia artificial", 
-				"Robótica", 
-				"IoT", 
-				"Ciberseguridad", 
-				"Blockchain", 
-				"Nube"
-			]
-		}
-	]
+			area: "Tecnología 4.0",
+			giros: [
+				"3D Printing",
+				"Business Intelligence",
+				"Big data y Analítica de datos",
+				"Inteligencia artificial",
+				"Robótica",
+				"IoT",
+				"Ciberseguridad",
+				"Blockchain",
+				"Nube",
+			],
+		},
+	];
 
 	const dict_num_empleados = [
-		{ "value" : 0 },
-		{ "value" : 1 },
-		{ "value" : 5 },
-		{ "value" : 10 },
-		{ "value" : 30 },
-		{ "value" : 50 },
-		{ "value" : 100 },
-		{ "value" : 150 },
-		{ "value" : 200 },
-		{ "value" : 250 },
-		{ "value" : 350 },
-		{ "value" : 500 },
-		{ "value" : 700 },
-		{ "value" : 850 },
-		{ "value" : 1000 },
-		{ "value" : 5000 },
-		{ "value" : 10000 },
-		{ "value" : 20000 },
-		{ "value" : 30000 },
-		{ "value" : 50000 },
-		{ "value" : 70000 }
-	]
+		{ value: 0 },
+		{ value: 1 },
+		{ value: 5 },
+		{ value: 10 },
+		{ value: 30 },
+		{ value: 50 },
+		{ value: 100 },
+		{ value: 150 },
+		{ value: 200 },
+		{ value: 250 },
+		{ value: 350 },
+		{ value: 500 },
+		{ value: 700 },
+		{ value: 850 },
+		{ value: 1000 },
+		{ value: 5000 },
+		{ value: 10000 },
+		{ value: 20000 },
+		{ value: 30000 },
+		{ value: 50000 },
+		{ value: 70000 },
+	];
 
 	const dict_rangos_ventas = [
-		{ "value" : "Menor a $500,000" },
-		{ "value" : "$500,000 a $1,000,000" },
-		{ "value" : "$1,000,000 - $2,000,000" },
-		{ "value" : "$2,000,000 - $5,000,000" },
-		{ "value" : "$5,000,000 - $10,000,000" },
-		{ "value" : "$10,000,000 - $50,000,000" },
-		{ "value" : "Mayor a $50,000,000" }
-	]
+		{ value: "Menor a $500,000" },
+		{ value: "$500,000 a $1,000,000" },
+		{ value: "$1,000,000 - $2,000,000" },
+		{ value: "$2,000,000 - $5,000,000" },
+		{ value: "$5,000,000 - $10,000,000" },
+		{ value: "$10,000,000 - $50,000,000" },
+		{ value: "Mayor a $50,000,000" },
+	];
 
 	const dict_num_certificaciones = [
-		{ "value" : 0 },
-		{ "value" : 1 },
-		{ "value" : 2 },
-		{ "value" : 3 },
-		{ "value" : 4 },
-		{ "value" : 5 },
-		{ "value" : 10 },
-		{ "value" : 30 },
-		{ "value" : 50 }
-	]
+		{ value: 0 },
+		{ value: 1 },
+		{ value: 2 },
+		{ value: 3 },
+		{ value: 4 },
+		{ value: 5 },
+		{ value: 10 },
+		{ value: 30 },
+		{ value: 50 },
+	];
 
 	const [validated, setValidated] = useState(false);
 	const { currentUser, fetchCurrentUser } =
@@ -152,177 +150,164 @@ const FormEmpresa = (props) => {
 	const history = useHistory();
 
 	// Area
-	const [area, setArea] = useState({"index": -1})
-	const [selectvalue, setSelectvalue] = useState("")
+	const [area, setArea] = useState({ index: -1 });
+	const [selectvalue, setSelectvalue] = useState("");
 
 	// regresa las opciones areas
 	const getAreas = function () {
-
 		return [
-			<option value="" key="0" disabled>Selecciona una opción</option>
-			].concat(Object.entries(dict_giros).map(function([index, key]) {
-				return <option key={index + 1} value={index}>{key["area"]}</option>;
-			}))
-	}
+			<option value='' key='0' disabled>
+				Selecciona una opción
+			</option>,
+		].concat(
+			Object.entries(dict_giros).map(function ([index, key]) {
+				return (
+					<option key={index + 1} value={index}>
+						{key["area"]}
+					</option>
+				);
+			})
+		);
+	};
 
 	// regresa las opciones de giros
 	// se debe seleccionar un area primero
 	const getGiros = function () {
 		if (area["index"] === -1) {
-			return <option key="" value="">Selecciona una opción</option>
+			return (
+				<option key='' value=''>
+					Selecciona una opción
+				</option>
+			);
 		}
 		return dict_giros[area["index"]]["giros"].map((value, i) => {
-			return <option key={i} value={value}>{value}</option>
-		})
-	}
+			return (
+				<option key={i} value={value}>
+					{value}
+				</option>
+			);
+		});
+	};
 
 	// Guarda el indice de dict_giros donde se encuentra el area seleccionada
 	// guarda el primer elemento de los giros
 	const updateArea = (e) => {
-		let index = e.target.value
+		let index = e.target.value;
 		// area
-		let select_area = dict_giros[index]["area"]
+		let select_area = dict_giros[index]["area"];
 		// primer giro del area
-		let giro_0 = dict_giros[index]["giros"][0]
-
-		// console.log(select_area)
-		
-		setArea({index});
-		setSelectvalue(giro_0)
+		let giro_0 = dict_giros[index]["giros"][0];
+		setArea({ index });
+		setSelectvalue(giro_0);
 
 		setItem({
 			...item,
 			area: select_area,
-			giro: giro_0
+			giro: giro_0,
 		});
-	}
+	};
 
-	
 	// lista de paises
-	const searchURL = 'https://restcountries.eu/rest/v2/all';
 
-	const [arrayCountries, setArrayCountries] = useState([])
-	var dict_countries = [];
+	const [arrayCountries, setArrayCountries] = useState([]);
 
-	async function getCountries() {
-		const url = searchURL;
-		const response = await fetch(url);
-		const responseData = await response.json();
-
-		// console.log(responseData);
-
-		 // create an empty array
-		Object.entries(responseData).map(function([index, key]) {
-			if(key["translations"]["es"] !== null){
-				dict_countries.push({
-					"label": key["translations"]["es"],
-					"value": key["translations"]["es"]
-				});
-			} else {
-				dict_countries.push({
-					"label": key["name"],
-					"value": key["name"]
-				});
-			}
-			
-		})
-		// console.log(dict_countries)
-		// return dict_countries
-	}
-
-	getCountries()
-
-	const options = useMemo(() => dict_countries, [])
+	useEffect(() => {
+		const fetchData = async () => {
+			var dict_countries = [];
+			const searchURL = "https://restcountries.eu/rest/v2/all";
+			const response = await fetch(searchURL);
+			const responseData = await response.json();
+			responseData.forEach((element) => {
+				if (element["translations"]["es"] !== null) {
+					dict_countries.push({
+						label: element["translations"]["es"],
+						value: element["translations"]["es"],
+					});
+				} else {
+					dict_countries.push({
+						label: element["name"],
+						value: element["name"],
+					});
+				}
+			});
+			setCountries(dict_countries);
+		};
+		fetchData();
+	}, []);
 
 	// guarda en un arreglo los países seleccionados
 	const handleChangeCountries = (selectedOptions) => {
-		setArrayCountries(selectedOptions)
+		const selectedValues = selectedOptions.map((option) => {
+			return option.value;
+		});
+		setArrayCountries(selectedOptions);
 		setItem({
 			...item,
-			paises_exp_princ: selectedOptions
+			paises_exp_princ: selectedValues,
 		});
-	}
+	};
 
 	// Imagen logo
 	const [image, setImage] = useState(null);
-	const [uploadImg, setUploadImg] = useState(false)
 
-	// Sube la imagen a firebase
-	function handleImageUpload() {
-		var storage = firebase.storage;
-		const uploadTask = storage.ref(`/images/${image.name}`).put(image);
-		uploadTask.on(
-			"state_changed", console.log, console.error, 
-			() => {
-				storage
-					.ref("images")
-					.child(image.name)
-					.getDownloadURL()
-					.then((url) => {
-					// setImage(null);
-					setItem({
-						...item,
-						logo: url
-					});
-					setUploadImg(true)
-					});
-			}
-		);
-	}
-
-	useEffect(() => {
-		if (uploadImg) {
-			const copy = item;
-			firebase.addEmpresa(copy).then((empresa) => {
-				firebase.setHasEmpresa(currentUser.uid, true, empresa.id);
-				fetchCurrentUser();
-				history.push("/");
-			});
-			console.log(copy);
-		}
-	  }, [uploadImg]);
-
-	
-	const handleImageChange = (e) =>  {
-		let img = e.target.files[0]
+	const handleImageChange = (e) => {
+		let img = e.target.files[0];
 		setImage(img);
-		// console.log(img)
-		// handleImageUpload()
-		
-	}
+	};
 
-	
 	// regresa las opciones de numeros de empleados
 	const getNumEmpleados = function () {
 		return [
-			<option value="" key="0" disabled>Selecciona una opción</option>
-		  ].concat(Object.entries(dict_num_empleados).map(function([index, key]) {
-			return <option key={index + 1} value={key["value"]}>{key["value"]}</option>;
-		  })
-		)
-	}
+			<option value='' key='0' disabled>
+				Selecciona una opción
+			</option>,
+		].concat(
+			Object.entries(dict_num_empleados).map(function ([index, key]) {
+				return (
+					<option key={index + 1} value={key["value"]}>
+						{key["value"]}
+					</option>
+				);
+			})
+		);
+	};
 
 	// regresa los rangos de ventas
 	const getRangosVentas = function () {
 		return [
-			<option value="" key="0" disabled>Selecciona una opción</option>
-		  ].concat(Object.entries(dict_rangos_ventas).map(function([index, key]) {
-				return <option key={index + 1} value={key["value"]}>{key["value"]}</option>;
+			<option value='' key='0' disabled>
+				Selecciona una opción
+			</option>,
+		].concat(
+			Object.entries(dict_rangos_ventas).map(function ([index, key]) {
+				return (
+					<option key={index + 1} value={key["value"]}>
+						{key["value"]}
+					</option>
+				);
 			})
-		  )
-		
-	}
+		);
+	};
 
 	// regresa los numeros de certificaciones
 	const getNumCertificaciones = function () {
 		return [
-			<option value="" key="0" disabled>Selecciona una opción</option>
-		  ].concat(Object.entries(dict_num_certificaciones).map(function([index, key]) {
-				return <option key={index + 1} value={key["value"]}>{key["value"]}</option>;
+			<option value='' key='0' disabled>
+				Selecciona una opción
+			</option>,
+		].concat(
+			Object.entries(dict_num_certificaciones).map(function ([
+				index,
+				key,
+			]) {
+				return (
+					<option key={index + 1} value={key["value"]}>
+						{key["value"]}
+					</option>
+				);
 			})
-		  )
-		
-	}
+		);
+	};
 
 	if (currentUser === null || currentUser === undefined) {
 		history.push("/");
@@ -335,30 +320,20 @@ const FormEmpresa = (props) => {
 		event.preventDefault();
 		let message = "Se ha subido la empresa";
 		const form = event.currentTarget;
-
-
-		console.log(item.logo)
-
 		try {
 			// Verifica que ningún campo esté vacío
 			if (form.checkValidity() === false) {
-				console.log(form.checkValidity());
 				message = "Campos sin responder";
 				event.stopPropagation();
 			} else {
 				// Añade la empresa a la base de datos
-				handleImageUpload()
-				// const copy = item;
-				// firebase.addEmpresa(copy).then((empresa) => {
-				// 	firebase.setHasEmpresa(currentUser.uid, true, empresa.id);
-				// 	fetchCurrentUser();
-				// 	history.push("/");
-				// });
-				// console.log(copy);
-			
+				firebase.addEmpresa(item, image).then((empresa) => {
+					firebase.setHasEmpresa(currentUser.uid, true, empresa.id);
+					fetchCurrentUser();
+					history.push("/");
+				});
 			}
 		} catch (e) {
-			console.log(e);
 			message =
 				"Ha ocurrido un error, revise que toda la información sea correcta,\nY que tiene buena conexión de internet.";
 		}
@@ -383,7 +358,9 @@ const FormEmpresa = (props) => {
 				<h5>Datos Públicos</h5>
 
 				<h6>Datos generales</h6>
-				<p><small>Ingrese los datos universales de la empresa.</small></p>
+				<p>
+					<small>Ingrese los datos universales de la empresa.</small>
+				</p>
 
 				<Row>
 					<Col md={4}>
@@ -394,7 +371,8 @@ const FormEmpresa = (props) => {
 								onChange={(str) => {
 									setItem({
 										...item,
-										nombre_comercial: str.currentTarget.value,
+										nombre_comercial:
+											str.currentTarget.value,
 									});
 								}}
 								required
@@ -406,8 +384,8 @@ const FormEmpresa = (props) => {
 						<Form.Group controlId=''>
 							<Form.Label>Área</Form.Label>
 							<Form.Control
-								as="select"
-								defaultValue=""
+								as='select'
+								defaultValue=''
 								onChange={updateArea}
 								required
 							>
@@ -420,15 +398,14 @@ const FormEmpresa = (props) => {
 						<Form.Group controlId=''>
 							<Form.Label>Giro / Especialidad</Form.Label>
 							<Form.Control
-								as="select"
+								as='select'
 								value={selectvalue}
 								onChange={(e) => {
-									setSelectvalue(e.currentTarget.value)
+									setSelectvalue(e.currentTarget.value);
 									setItem({
 										...item,
 										giro: e.currentTarget.value,
 									});
-									
 								}}
 								required
 							>
@@ -457,20 +434,23 @@ const FormEmpresa = (props) => {
 					<Col md={4}>
 						<Form.Group controlId=''>
 							<Form.Label>Logo</Form.Label>
-							<Form.File 
-								accept="image/*"
-								label={image ? image.name : "Seleccionar imagen" }
+							<Form.File
+								accept='image/*'
+								label={
+									image ? image.name : "Seleccionar imagen"
+								}
 								onChange={handleImageChange}
 								custom
 								required
-							>
-							</Form.File>
+							></Form.File>
 						</Form.Group>
 					</Col>
 				</Row>
 
 				<h6>Dirección</h6>
-				<p><small>Ingrese los datos de ubicación.</small></p>
+				<p>
+					<small>Ingrese los datos de ubicación.</small>
+				</p>
 
 				<Row>
 					<Col sm={6}>
@@ -528,8 +508,8 @@ const FormEmpresa = (props) => {
 							<Form.Label>Código Postal</Form.Label>
 							<Form.Control
 								placeholder='Código Postal'
-								type="text"
-								pattern="[0-9]{5}"
+								type='text'
+								pattern='[0-9]{5}'
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -538,7 +518,9 @@ const FormEmpresa = (props) => {
 								}}
 								required
 							/>
-							<Form.Control.Feedback type="invalid" >Deben ser 5 dígitos</Form.Control.Feedback>
+							<Form.Control.Feedback type='invalid'>
+								Deben ser 5 dígitos
+							</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 
@@ -547,23 +529,32 @@ const FormEmpresa = (props) => {
 							<Form.Label>Teléfono</Form.Label>
 							<Form.Control
 								placeholder='Teléfono'
-								type="text"
-								pattern="[0-9]{10}"
+								type='text'
+								pattern='[0-9]{10}'
 								onChange={(str) => {
 									setItem({
 										...item,
-										telefono: parseInt(str.currentTarget.value),
+										telefono: parseInt(
+											str.currentTarget.value
+										),
 									});
 								}}
 								required
 							/>
-							<Form.Control.Feedback type="invalid" >Deben ser 10 dígitos</Form.Control.Feedback>
+							<Form.Control.Feedback type='invalid'>
+								Deben ser 10 dígitos
+							</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 				</Row>
 
 				<h6>Información de contacto</h6>
-				<p><small>Ingrese el correo de contacto y dirección de la página web.</small></p>
+				<p>
+					<small>
+						Ingrese el correo de contacto y dirección de la página
+						web.
+					</small>
+				</p>
 
 				<Row>
 					<Col sm={6}>
@@ -588,7 +579,7 @@ const FormEmpresa = (props) => {
 							<Form.Label>Página Web</Form.Label>
 							<Form.Control
 								placeholder='Ej. http://www.ejemplo.com'
-								type="url"
+								type='url'
 								pattern="^(?:http(s)?:\/\/)[\w.-]+(?:\.[\w\.-]+)+\.[\w\-_~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
 								onChange={(str) => {
 									setItem({
@@ -598,28 +589,21 @@ const FormEmpresa = (props) => {
 								}}
 								required
 							/>
-							<Form.Control.Feedback type="invalid" >Url no es válido</Form.Control.Feedback>
+							<Form.Control.Feedback type='invalid'>
+								Url no es válido
+							</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 				</Row>
 
 				<h6>Redes Sociales</h6>
 
-				<p><small>Ingrese las direcciones a las redes sociales que correspondan.</small></p>
-
-				{/* <Form.Group controlId=''>
-					<Form.Label>Redes Sociales</Form.Label>
-					<Form.Control
-						placeholder='Redes Sociales'
-						onChange={(str) => {
-							setItem({
-								...item,
-								redes_sociales: str.currentTarget.value,
-							});
-						}}
-						required
-					/>
-				</Form.Group> */}
+				<p>
+					<small>
+						Ingrese las direcciones a las redes sociales que
+						correspondan.
+					</small>
+				</p>
 
 				<Row>
 					<Col sm={6}>
@@ -627,7 +611,7 @@ const FormEmpresa = (props) => {
 							<Form.Label>LinkedIn</Form.Label>
 							<Form.Control
 								placeholder='Ej. https://www.linkedin.com/company/miempresa/'
-								type="url"
+								type='url'
 								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.linkedin.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
 								onChange={(str) => {
 									setItem({
@@ -636,10 +620,13 @@ const FormEmpresa = (props) => {
 									});
 								}}
 							/>
-							<Form.Text className="text-muted">
+							<Form.Text className='text-muted'>
 								Opcional
 							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Debe ser un url de LinkedIn (https://www.linkedin.com/)</Form.Control.Feedback>
+							<Form.Control.Feedback type='invalid'>
+								Debe ser un url de LinkedIn
+								(https://www.linkedin.com/)
+							</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 
@@ -648,7 +635,7 @@ const FormEmpresa = (props) => {
 							<Form.Label>Facebook</Form.Label>
 							<Form.Control
 								placeholder='Ej. https://www.facebook.com/miempresa'
-								type="url"
+								type='url'
 								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.facebook.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
 								onChange={(str) => {
 									setItem({
@@ -657,10 +644,13 @@ const FormEmpresa = (props) => {
 									});
 								}}
 							/>
-							<Form.Text className="text-muted">
+							<Form.Text className='text-muted'>
 								Opcional
 							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Debe ser un url de Facebook (https://www.facebook.com/)</Form.Control.Feedback>
+							<Form.Control.Feedback type='invalid'>
+								Debe ser un url de Facebook
+								(https://www.facebook.com/)
+							</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 				</Row>
@@ -671,7 +661,7 @@ const FormEmpresa = (props) => {
 							<Form.Label>Instagram</Form.Label>
 							<Form.Control
 								placeholder='Ej. https://www.instagram.com/miempresa/'
-								type="url"
+								type='url'
 								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.instagram.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
 								onChange={(str) => {
 									setItem({
@@ -680,10 +670,13 @@ const FormEmpresa = (props) => {
 									});
 								}}
 							/>
-							<Form.Text className="text-muted">
+							<Form.Text className='text-muted'>
 								Opcional
 							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Debe ser un url de Instagram (https://www.instagram.com/)</Form.Control.Feedback>
+							<Form.Control.Feedback type='invalid'>
+								Debe ser un url de Instagram
+								(https://www.instagram.com/)
+							</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 
@@ -692,7 +685,7 @@ const FormEmpresa = (props) => {
 							<Form.Label>YouTube</Form.Label>
 							<Form.Control
 								placeholder='Ej. https://www.youtube.com/miempresa'
-								type="url"
+								type='url'
 								pattern="^(?:http(s)?:\/\/)[w]{3}(?:\.youtube.com\/)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$"
 								onChange={(str) => {
 									setItem({
@@ -701,19 +694,24 @@ const FormEmpresa = (props) => {
 									});
 								}}
 							/>
-							<Form.Text className="text-muted">
+							<Form.Text className='text-muted'>
 								Opcional
 							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Debe ser un url de YouTube (https://www.youtube.com/)</Form.Control.Feedback>
+							<Form.Control.Feedback type='invalid'>
+								Debe ser un url de YouTube
+								(https://www.youtube.com/)
+							</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 				</Row>
-				
-				<br/>
+
+				<br />
 				<h5>Datos Confidenciales</h5>
 
 				<h6>CEO</h6>
-				<p><small>Ingrese los datos del CEO.</small></p>
+				<p>
+					<small>Ingrese los datos del CEO.</small>
+				</p>
 
 				<Row>
 					<Col md={4}>
@@ -737,16 +735,15 @@ const FormEmpresa = (props) => {
 							<Form.Label>Correo CEO</Form.Label>
 							<Form.Control
 								placeholder='Correo CEO'
-								type="email"
+								type='email'
 								onChange={(str) => {
 									setItem({
 										...item,
 										email_ceo: str.currentTarget.value,
 									});
 								}}
-								
 							/>
-							<Form.Text className="text-muted">
+							<Form.Text className='text-muted'>
 								Opcional
 							</Form.Text>
 						</Form.Group>
@@ -757,25 +754,31 @@ const FormEmpresa = (props) => {
 							<Form.Label>Teléfono CEO</Form.Label>
 							<Form.Control
 								placeholder='Teléfono CEO'
-								type="text"
-								pattern="[0-9]{10}"
+								type='text'
+								pattern='[0-9]{10}'
 								onChange={(str) => {
 									setItem({
 										...item,
-										tel_ceo: parseInt(str.currentTarget.value),
+										tel_ceo: parseInt(
+											str.currentTarget.value
+										),
 									});
 								}}
 							/>
-							<Form.Text className="text-muted">
+							<Form.Text className='text-muted'>
 								Opcional
 							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Deben ser 10 dígitos</Form.Control.Feedback>
+							<Form.Control.Feedback type='invalid'>
+								Deben ser 10 dígitos
+							</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 				</Row>
 
 				<h6>CIO</h6>
-				<p><small>Ingrese los datos del CIO.</small></p>
+				<p>
+					<small>Ingrese los datos del CIO.</small>
+				</p>
 
 				<Row>
 					<Col md={4}>
@@ -806,7 +809,7 @@ const FormEmpresa = (props) => {
 									});
 								}}
 							/>
-							<Form.Text className="text-muted">
+							<Form.Text className='text-muted'>
 								Opcional
 							</Form.Text>
 						</Form.Group>
@@ -817,26 +820,34 @@ const FormEmpresa = (props) => {
 							<Form.Label>Teléfono CIO</Form.Label>
 							<Form.Control
 								placeholder='Teléfono CIO'
-								type="text"
-								pattern="[0-9]{10}"
+								type='text'
+								pattern='[0-9]{10}'
 								onChange={(str) => {
 									setItem({
 										...item,
-										tel_cio: parseInt(str.currentTarget.value),
+										tel_cio: parseInt(
+											str.currentTarget.value
+										),
 									});
 								}}
 							/>
-							<Form.Text className="text-muted">
+							<Form.Text className='text-muted'>
 								Opcional
 							</Form.Text>
-							<Form.Control.Feedback type="invalid" >Deben ser 10 dígitos</Form.Control.Feedback>
+							<Form.Control.Feedback type='invalid'>
+								Deben ser 10 dígitos
+							</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
 				</Row>
-				
 
 				<h6>Empresa</h6>
-				<p><small>Ingrese la razón social y los servicios que proporciona su empresa.</small></p>
+				<p>
+					<small>
+						Ingrese la razón social y los servicios que proporciona
+						su empresa.
+					</small>
+				</p>
 
 				<Row>
 					<Col md={5}>
@@ -874,7 +885,12 @@ const FormEmpresa = (props) => {
 
 				<h6>Cantidad de empleados</h6>
 
-				<p><small>Seleccione el número aproximado de empleados para cada opción.</small></p>
+				<p>
+					<small>
+						Seleccione el número aproximado de empleados para cada
+						opción.
+					</small>
+				</p>
 
 				<Row>
 					<Col sm={4}>
@@ -883,11 +899,13 @@ const FormEmpresa = (props) => {
 							<Form.Control
 								// placeholder='# empleados en Nuevo León'
 								as='select'
-								defaultValue=""
+								defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
-										num_emp_nl: parseInt(str.currentTarget.value),
+										num_emp_nl: parseInt(
+											str.currentTarget.value
+										),
 									});
 								}}
 								required
@@ -903,11 +921,13 @@ const FormEmpresa = (props) => {
 							<Form.Control
 								placeholder='# empleados en México'
 								as='select'
-								defaultValue=""
+								defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
-										num_emp_mx: parseInt(str.currentTarget.value),
+										num_emp_mx: parseInt(
+											str.currentTarget.value
+										),
 									});
 								}}
 								required
@@ -922,12 +942,14 @@ const FormEmpresa = (props) => {
 							<Form.Label>Fuera de México</Form.Label>
 							<Form.Control
 								placeholder='# empleados fuera de México'
-								as="select"
-								defaultValue=""
+								as='select'
+								defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
-										num_emp_nomx: parseInt(str.currentTarget.value),
+										num_emp_nomx: parseInt(
+											str.currentTarget.value
+										),
 									});
 								}}
 								required
@@ -944,12 +966,14 @@ const FormEmpresa = (props) => {
 							<Form.Label>En el área de TI</Form.Label>
 							<Form.Control
 								placeholder='# empleados en TI'
-								as="select"
-								defaultValue=""
+								as='select'
+								defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
-										num_emp_ti: parseInt(str.currentTarget.value),
+										num_emp_ti: parseInt(
+											str.currentTarget.value
+										),
 									});
 								}}
 								required
@@ -958,7 +982,7 @@ const FormEmpresa = (props) => {
 							</Form.Control>
 						</Form.Group>
 					</Col>
-						
+
 					<Col sm={6} md={6}>
 						<Form.Group controlId=''>
 							<Form.Label>
@@ -966,12 +990,14 @@ const FormEmpresa = (props) => {
 							</Form.Label>
 							<Form.Control
 								placeholder='# empleados en Administración'
-								as="select"
-								defaultValue=""
+								as='select'
+								defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
-										num_emp_adm: parseInt(str.currentTarget.value),
+										num_emp_adm: parseInt(
+											str.currentTarget.value
+										),
 									});
 								}}
 								required
@@ -984,7 +1010,12 @@ const FormEmpresa = (props) => {
 
 				<h6>Ventas</h6>
 
-				<p><small>Seleccione el rango de ventas que mejor corresponda para cada opción.</small></p>
+				<p>
+					<small>
+						Seleccione el rango de ventas que mejor corresponda para
+						cada opción.
+					</small>
+				</p>
 
 				<Row>
 					<Col md={4}>
@@ -992,8 +1023,8 @@ const FormEmpresa = (props) => {
 							<Form.Label>Ventas nacionales</Form.Label>
 							<Form.Control
 								placeholder='Ventas nacionales'
-								as="select"
-								defaultValue=""
+								as='select'
+								defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -1009,17 +1040,16 @@ const FormEmpresa = (props) => {
 
 					<Col md={4}>
 						<Form.Group controlId=''>
-							<Form.Label>
-								Ventas en el extranjero
-							</Form.Label>
+							<Form.Label>Ventas en el extranjero</Form.Label>
 							<Form.Control
 								placeholder='Ventas en el extranjero'
-								as="select"
-								defaultValue=""
+								as='select'
+								defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
-										porcentaje_ventas_ext: str.currentTarget.value,
+										porcentaje_ventas_ext:
+											str.currentTarget.value,
 									});
 								}}
 								required
@@ -1034,12 +1064,12 @@ const FormEmpresa = (props) => {
 							<Form.Label>Ventas anuales</Form.Label>
 							<Form.Control
 								placeholder='Ventas anuales'
-								as="select"
-								defaultValue=""
+								as='select'
+								defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
-										ventas_anuales: str.currentTarget.value
+										ventas_anuales: str.currentTarget.value,
 									});
 								}}
 								required
@@ -1051,12 +1081,15 @@ const FormEmpresa = (props) => {
 				</Row>
 
 				<h6>Subsidiarias</h6>
-				<p><small>Seleccione los países en el que se tiene una subsidiaria de la empresa.</small></p>
+				<p>
+					<small>
+						Seleccione los países en el que se tiene una subsidiaria
+						de la empresa.
+					</small>
+				</p>
 
 				<Form.Group controlId=''>
-					<Form.Label>
-					Países
-					</Form.Label>
+					<Form.Label>Países</Form.Label>
 					<MultiSelect
 						overrideStrings={{
 							selectSomeItems: "Selecciona los países",
@@ -1064,7 +1097,7 @@ const FormEmpresa = (props) => {
 							selectAll: "Todos",
 							search: "Buscar",
 						}}
-						options={options}
+						options={countries}
 						value={arrayCountries}
 						onChange={handleChangeCountries}
 						// onChange={(str) => {
@@ -1076,31 +1109,42 @@ const FormEmpresa = (props) => {
 						required
 					/>
 					<Form.Check>
-						<Form.Check.Input 
-							checked={arrayCountries != null && arrayCountries.length > 0}
-							style={{display:'none' }}
+						<Form.Check.Input
+							checked={
+								arrayCountries != null &&
+								arrayCountries.length > 0
+							}
+							onChange={() => {}}
+							style={{ display: "none" }}
 							required
 						/>
-						<Form.Control.Feedback type="invalid" >Seleccionar uno o más paises</Form.Control.Feedback>
+						<Form.Control.Feedback type='invalid'>
+							Seleccionar uno o más paises
+						</Form.Control.Feedback>
 					</Form.Check>
 				</Form.Group>
 
 				<h6>Certificaciones de la empresa</h6>
-				<p><small>Seleccione la cantidad e ingrese las certificaciones con las que cuenta su empresa.</small></p>
+				<p>
+					<small>
+						Seleccione la cantidad e ingrese las certificaciones con
+						las que cuenta su empresa.
+					</small>
+				</p>
 
 				<Row>
 					<Col md={4}>
 						<Form.Group controlId=''>
-							<Form.Label>
-								Número de Certificaciones
-							</Form.Label>
+							<Form.Label>Número de Certificaciones</Form.Label>
 							<Form.Control
-								as="select"
-								defaultValue=""
+								as='select'
+								defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
-										num_cert_empresas: parseInt(str.currentTarget.value),
+										num_cert_empresas: parseInt(
+											str.currentTarget.value
+										),
 									});
 								}}
 								required
@@ -1117,7 +1161,6 @@ const FormEmpresa = (props) => {
 							</Form.Label>
 							<Form.Control
 								placeholder='Ej. PMP, CISSP, MCSD, ITIL...'
-								
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -1131,21 +1174,26 @@ const FormEmpresa = (props) => {
 				</Row>
 
 				<h6>Certificaciones de los empleados</h6>
-				<p><small>Seleccione la cantidad e ingrese las certificaciones con las que cuentan sus empleados.</small></p>
+				<p>
+					<small>
+						Seleccione la cantidad e ingrese las certificaciones con
+						las que cuentan sus empleados.
+					</small>
+				</p>
 
 				<Row>
 					<Col md={4}>
 						<Form.Group controlId=''>
-							<Form.Label>
-								Número de certificaciones
-							</Form.Label>
+							<Form.Label>Número de certificaciones</Form.Label>
 							<Form.Control
-								as="select"
-								defaultValue=""
+								as='select'
+								defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
-										num_cert_empleados: parseInt(str.currentTarget.value),
+										num_cert_empleados: parseInt(
+											str.currentTarget.value
+										),
 									});
 								}}
 								required
@@ -1173,25 +1221,6 @@ const FormEmpresa = (props) => {
 						</Form.Group>
 					</Col>
 				</Row>
-
-				
-
-				{/* <Form.Group controlId=''>
-					<Form.Label>
-						Número de certificaciones con las que cuentan sus
-						empleados
-					</Form.Label>
-					<Form.Control
-						placeholder='Número de certificaciones con las que cuentan sus empleados'
-						onChange={(str) => {
-							setItem({
-								...item,
-								num_cert_emp: parseInt(str.currentTarget.value),
-							});
-						}}
-						required
-					/>
-				</Form.Group> */}
 
 				<Button
 					id='btn-submitForm'

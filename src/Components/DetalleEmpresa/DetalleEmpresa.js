@@ -9,65 +9,77 @@ import youtubeIcon from "../../images/youtube.png";
 import "./DetalleEmpresa.css";
 
 const DetalleEmpresa = (props) => {
-	console.log(props.datosEmpresa);
-	/*
-    useEffect(() => {
-		firebase.getEmpresasByName(props.nombreEmpresa).then((result) => {
-			datosEmpresa = result[0];
-            //console.log(datosEmpresa);
-			//setEmpresa(datosEmpresa);
-            console.log(datosEmpresa);
-		});
-	}, [firebase,props.nombreEmpresa]);
-    */
-
 	const facebook = () => {
-		if(props.datosEmpresa.facebook !== "") {
-			return <a href={props.datosEmpresa.facebook} target="_blank"rel="noopener noreferrer">
-				<img
-					style={{ width: "30px" }}
-					src={facebookIcon}
-					alt='Logo de Empresa'
-				/>
-			</a>
+		if (props.datosEmpresa.facebook !== "") {
+			return (
+				<a
+					href={props.datosEmpresa.facebook}
+					target='_blank'
+					rel='noopener noreferrer'
+				>
+					<img
+						style={{ width: "30px" }}
+						src={facebookIcon}
+						alt='Logo de Empresa'
+					/>
+				</a>
+			);
 		}
-	}
+	};
 
 	const instagram = () => {
-		if(props.datosEmpresa.instagram !== "") {
-			return <a href={props.datosEmpresa.instagram} target="_blank" rel="noopener noreferrer">
-				<img
-					style={{ width: "30px" }}
-					src={instagramIcon}
-					alt='Logo de Empresa'
-				/>
-			</a>
+		if (props.datosEmpresa.instagram !== "") {
+			return (
+				<a
+					href={props.datosEmpresa.instagram}
+					target='_blank'
+					rel='noopener noreferrer'
+				>
+					<img
+						style={{ width: "30px" }}
+						src={instagramIcon}
+						alt='Logo de Empresa'
+					/>
+				</a>
+			);
 		}
-	}
+	};
 
 	const youtube = () => {
-		if(props.datosEmpresa.youtube !== "") {
-			return <a href={props.datosEmpresa.youtube} target="_blank" rel="noopener noreferrer">
-				<img
-					style={{ width: "30px" }}
-					src={youtubeIcon}
-					alt='Logo de Empresa'
-				/>
-			</a>
+		if (props.datosEmpresa.youtube !== "") {
+			return (
+				<a
+					href={props.datosEmpresa.youtube}
+					target='_blank'
+					rel='noopener noreferrer'
+				>
+					<img
+						style={{ width: "30px" }}
+						src={youtubeIcon}
+						alt='Logo de Empresa'
+					/>
+				</a>
+			);
 		}
-	}
+	};
 
 	const linkedin = () => {
-		if(props.datosEmpresa.linkedin !== "") {
-			return <a href={props.datosEmpresa.linkedin} target="_blank" rel="noopener noreferrer">
-				<img
-					style={{ width: "30px" }}
-					src={linkedinIcon}
-					alt='Logo de Empresa'
-				/>
-			</a>
+		if (props.datosEmpresa.linkedin !== "") {
+			return (
+				<a
+					href={props.datosEmpresa.linkedin}
+					target='_blank'
+					rel='noopener noreferrer'
+				>
+					<img
+						style={{ width: "30px" }}
+						src={linkedinIcon}
+						alt='Logo de Empresa'
+					/>
+				</a>
+			);
 		}
-	}
+	};
 
 	return (
 		<Container>
@@ -88,7 +100,7 @@ const DetalleEmpresa = (props) => {
 				</Row>
 				<Row
 					className='text-left mb-2 m-4'
-					style={{ "fontSize": "1.25rem" }}
+					style={{ fontSize: "1.25rem" }}
 				>
 					{props.datosEmpresa.descripcion}
 				</Row>
@@ -97,8 +109,8 @@ const DetalleEmpresa = (props) => {
 					<a
 						className='btn btn-it-book'
 						href={props.datosEmpresa.pagina_web}
-						target="_blank"
-						rel="noopener noreferrer"
+						target='_blank'
+						rel='noopener noreferrer'
 						role='button'
 					>
 						Página Web
@@ -106,51 +118,67 @@ const DetalleEmpresa = (props) => {
 				</Row>
 				<Row className='text-left h3'>Información de Contacto:</Row>
 				<Row>
-					<Col md="8" className=''>
+					<Col md='8' className=''>
 						<Row className='text-left row_contacto'>
-							<Col md="auto" className='row_descripcion '>E-mail:</Col>
-							<Col md="auto">{props.datosEmpresa.email}</Col>
+							<Col md='auto' className='row_descripcion '>
+								E-mail:
+							</Col>
+							<Col md='auto'>{props.datosEmpresa.email}</Col>
 						</Row>
 						<Row className='text-left row_contacto'>
-							<Col md="auto" className='row_descripcion'>Teléfono:</Col>
-							<Col md="auto">{props.datosEmpresa.telefono}</Col>
+							<Col md='auto' className='row_descripcion'>
+								Teléfono:
+							</Col>
+							<Col md='auto'>{props.datosEmpresa.telefono}</Col>
 						</Row>
 						<Row className='text-left row_contacto'>
-							<Col md="auto" className='row_descripcion'>Dirección:</Col>
-							<Col md="auto">
+							<Col md='auto' className='row_descripcion'>
+								Dirección:
+							</Col>
+							<Col md='auto'>
 								{props.datosEmpresa.domicilio},{" "}
 								{props.datosEmpresa.colonia},{" "}
 								{props.datosEmpresa.municipio},{" "}
 								{props.datosEmpresa.cp}
 							</Col>
-							
 						</Row>
-						
 					</Col>
-					<Col md="4" className='imgBorder'>
+					<Col md='4' className='imgBorder'>
 						<Row className='justify-content-center'>
 							Ofrece sus servicios en:
 						</Row>
 						<Row className='justify-content-center font-weight-bold'>
-							{
-								Object.entries(props.datosEmpresa.paises_exp_princ).map(function([index, key]) {
-									if(index < (props.datosEmpresa.paises_exp_princ.length - 1)) {
-										return key["label"] + ", "
-									}
+							{Object.entries(
+								props.datosEmpresa.paises_exp_princ
+							).map(function ([index, value]) {
+								if (
+									index <
+									props.datosEmpresa.paises_exp_princ.length -
+										1
+								) {
+									return value + ", ";
+								}
 
-									return key["label"] 
-								})
-							}
+								return value;
+							})}
 							{/* {props.datosEmpresa.paises_exp_princ} */}
 						</Row>
 					</Col>
 				</Row>
-				
-				<Row style={{paddingTop: "10px"}}>
-					<Col xs="auto" style={{padding: "0px 10px"}}>{linkedin()}</Col>
-					<Col xs="auto" style={{padding: "0px 10px"}}>{facebook()}</Col>
-					<Col xs="auto" style={{padding: "0px 10px"}}>{instagram()}</Col>
-					<Col xs="auto" style={{padding: "0px 10px"}}>{youtube()}</Col>
+
+				<Row style={{ paddingTop: "10px" }}>
+					<Col xs='auto' style={{ padding: "0px 10px" }}>
+						{linkedin()}
+					</Col>
+					<Col xs='auto' style={{ padding: "0px 10px" }}>
+						{facebook()}
+					</Col>
+					<Col xs='auto' style={{ padding: "0px 10px" }}>
+						{instagram()}
+					</Col>
+					<Col xs='auto' style={{ padding: "0px 10px" }}>
+						{youtube()}
+					</Col>
 				</Row>
 			</div>
 		</Container>

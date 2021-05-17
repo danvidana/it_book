@@ -150,8 +150,24 @@ class Firebase {
 		}
 	};
 
-	addEmpresa = async (empresa) => {
+	addEmpresa = async (empresa, image = null) => {
+		if (image !== null) {
+			empresa["logo"] = await this.uploadFile(image, "images");
+		}
+
 		return this.firestore.collection("Empresas").add(empresa);
+	};
+
+	uploadFile = async (file, storageFolder) => {
+		try {
+			const storageRef = this.storage
+				.ref()
+				.child(`${storageFolder}/${file.name}`);
+			await storageRef.put(file);
+			return storageRef.getDownloadURL();
+		} catch (e) {
+			return Promise.reject(e);
+		}
 	};
 }
 
