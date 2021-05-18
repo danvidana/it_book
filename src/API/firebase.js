@@ -96,6 +96,16 @@ class Firebase {
 		});
 	};
 
+	getEmpresaByID = async (id) => {
+		const empresaSnapshot = await this.firestore
+			.collection("Empresas")
+			.doc(id)
+			.get();
+		const empresa = empresaSnapshot.data();
+		empresa["id"] = empresaSnapshot.id;
+		return empresa;
+	};
+
 	getEmpresasByName = async (name, limit) => {
 		if (name === "") {
 			const empresas = await this.firestore
@@ -156,6 +166,14 @@ class Firebase {
 		}
 
 		return this.firestore.collection("Empresas").add(empresa);
+	};
+
+	updateEmpresa = async (id, empresa, image = null) => {
+		if (image !== null) {
+			empresa["logo"] = await this.uploadFile(image, "images");
+		}
+
+		return this.firestore.collection("Empresas").doc(id).update(empresa);
 	};
 
 	uploadFile = async (file, storageFolder) => {
