@@ -1,16 +1,24 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useMemo } from "react";
 import { FirebaseContext } from "../../API/index";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { CurrentUserContext } from "../../CurrentUserContext";
 import "./FormEmpresa.css";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 import MultiSelect from "react-multi-select-component";
 
 // Componente del formulario para dar de alta una empresa
 
-const FormEmpresa = (props) => {
+const FormEmpresa = () => {
 	const firebase = useContext(FirebaseContext);
 	const [countries, setCountries] = useState([]);
+	const [validated, setValidated] = useState(false);
+	const location = useLocation();
+	const { currentUser, fetchCurrentUser } =
+		React.useContext(CurrentUserContext);
+	const history = useHistory();
+	const modifying =
+		location.pathname.startsWith("/modificar-empresa") &&
+		location.pathname.split("/").pop() === currentUser.userData.empresaID;
 	const [item, setItem] = useState({
 		nombre_comercial: "",
 		area: "",
@@ -36,26 +44,25 @@ const FormEmpresa = (props) => {
 		facebook: "",
 		instagram: "",
 		youtube: "",
-		num_emp_nl: 0,
-		num_emp_mx: 0,
-		num_emp_nomx: 0,
-		num_emp_ti: 0,
-		num_emp_adm: 0,
+		num_emp_nl: NaN,
+		num_emp_mx: NaN,
+		num_emp_nomx: NaN,
+		num_emp_ti: NaN,
+		num_emp_adm: NaN,
 		ventas_nat: "",
 		ventas_ext: "",
 		ventas_anuales: "",
 		paises_exp_princ: [],
-		num_cert_empresa: 0,
+		num_cert_empresa: NaN,
 		cert_empresa: "",
-		num_cert_empleado: 0,
+		num_cert_empleado: NaN,
 		cert_empleado: "",
 	});
 
 	// diccionario de todas las opciones de giros por area
-	const dict_giros = [
-		{
-			area: "Desarrollo de Software",
-			giros: [
+	const dict_giros = useMemo(() => {
+		return {
+			"Desarrollo de Software": [
 				"Desarrollo Web",
 				"Soluciones Tecnológicas",
 				"Fintech",
@@ -63,10 +70,7 @@ const FormEmpresa = (props) => {
 				"E-commerce",
 				"Desarrollo a la medida",
 			],
-		},
-		{
-			area: "Servicios",
-			giros: [
+			Servicios: [
 				"Facturación electrónica",
 				"Staffing",
 				"Software as a service",
@@ -77,14 +81,8 @@ const FormEmpresa = (props) => {
 				"Servicios de Telecomuicaciones",
 				"Streaming y desarrollo de eventos virtuales",
 			],
-		},
-		{
-			area: "Hardware",
-			giros: ["Uso de PLC", "Redes industriales"],
-		},
-		{
-			area: "Tecnología 4.0",
-			giros: [
+			Hardware: ["Uso de PLC", "Redes industriales"],
+			"Tecnología 4.0": [
 				"3D Printing",
 				"Business Intelligence",
 				"Big data y Analítica de datos",
@@ -95,9 +93,33 @@ const FormEmpresa = (props) => {
 				"Blockchain",
 				"Nube",
 			],
-		},
-	];
+		};
+	}, []);
 
+	useEffect(() => {
+		if (modifying) {
+			firebase
+				.getEmpresaByID(currentUser.userData.empresaID)
+				.then((empresa) => {
+					setItem(empresa);
+					const arrayCountries = empresa.paises_exp_princ.map(
+						(pais) => {
+							return {
+								value: pais,
+								label: pais,
+							};
+						}
+					);
+					setArrayCountries(arrayCountries);
+				});
+		}
+	}, [currentUser.userData.empresaID, firebase, modifying, dict_giros]);
+
+	if (currentUser === null || currentUser === undefined) {
+		history.push("/");
+	} else if (!modifying && currentUser.userData.hasEmpresa) {
+		history.push("/");
+	}
 	const dict_num_empleados = [
 		{ value: 0 },
 		{ value: 1 },
@@ -144,26 +166,17 @@ const FormEmpresa = (props) => {
 		{ value: 50 },
 	];
 
-	const [validated, setValidated] = useState(false);
-	const { currentUser, fetchCurrentUser } =
-		React.useContext(CurrentUserContext);
-	const history = useHistory();
-
-	// Area
-	const [area, setArea] = useState({ index: -1 });
-	const [selectvalue, setSelectvalue] = useState("");
-
 	// regresa las opciones areas
 	const getAreas = function () {
 		return [
-			<option value='' key='0' disabled>
+			<option value='' key={0} disabled>
 				Selecciona una opción
 			</option>,
 		].concat(
-			Object.entries(dict_giros).map(function ([index, key]) {
+			Object.keys(dict_giros).map((key, index) => {
 				return (
-					<option key={index + 1} value={index}>
-						{key["area"]}
+					<option key={index + 1} value={key}>
+						{key}
 					</option>
 				);
 			})
@@ -173,14 +186,14 @@ const FormEmpresa = (props) => {
 	// regresa las opciones de giros
 	// se debe seleccionar un area primero
 	const getGiros = function () {
-		if (area["index"] === -1) {
+		if (item.area === "") {
 			return (
 				<option key='' value=''>
 					Selecciona una opción
 				</option>
 			);
 		}
-		return dict_giros[area["index"]]["giros"].map((value, i) => {
+		return dict_giros[item.area].map((value, i) => {
 			return (
 				<option key={i} value={value}>
 					{value}
@@ -192,18 +205,15 @@ const FormEmpresa = (props) => {
 	// Guarda el indice de dict_giros donde se encuentra el area seleccionada
 	// guarda el primer elemento de los giros
 	const updateArea = (e) => {
-		let index = e.target.value;
 		// area
-		let select_area = dict_giros[index]["area"];
+		let select_area = e.target.value;
 		// primer giro del area
-		let giro_0 = dict_giros[index]["giros"][0];
-		setArea({ index });
-		setSelectvalue(giro_0);
+		let giro = dict_giros[e.target.value][0];
 
 		setItem({
 			...item,
 			area: select_area,
-			giro: giro_0,
+			giro: giro,
 		});
 	};
 
@@ -309,12 +319,6 @@ const FormEmpresa = (props) => {
 		);
 	};
 
-	if (currentUser === null || currentUser === undefined) {
-		history.push("/");
-	} else if (currentUser.userData.hasEmpresa) {
-		history.push("/");
-	}
-
 	// función para subir cambios a la base de datos
 	const submitChanges = async (event) => {
 		event.preventDefault();
@@ -326,14 +330,27 @@ const FormEmpresa = (props) => {
 				message = "Campos sin responder";
 				event.stopPropagation();
 			} else {
-				// Añade la empresa a la base de datos
-				firebase.addEmpresa(item, image).then((empresa) => {
-					firebase.setHasEmpresa(currentUser.uid, true, empresa.id);
-					fetchCurrentUser();
-					history.push("/");
-				});
+				if (modifying) {
+					message = "Se ha modificado la empresa!";
+					const id = currentUser.userData.empresaID;
+					firebase.updateEmpresa(id, item, image).then(() => {
+						history.push("/");
+					});
+				} else {
+					// Añade la empresa a la base de datos
+					firebase.addEmpresa(item, image).then((empresa) => {
+						firebase.setHasEmpresa(
+							currentUser.uid,
+							true,
+							empresa.id
+						);
+						fetchCurrentUser();
+						history.push("/");
+					});
+				}
 			}
 		} catch (e) {
+			console.log(e);
 			message =
 				"Ha ocurrido un error, revise que toda la información sea correcta,\nY que tiene buena conexión de internet.";
 		}
@@ -375,6 +392,7 @@ const FormEmpresa = (props) => {
 											str.currentTarget.value,
 									});
 								}}
+								value={item.nombre_comercial}
 								required
 							/>
 						</Form.Group>
@@ -385,7 +403,7 @@ const FormEmpresa = (props) => {
 							<Form.Label>Área</Form.Label>
 							<Form.Control
 								as='select'
-								defaultValue=''
+								value={item.area}
 								onChange={updateArea}
 								required
 							>
@@ -399,9 +417,8 @@ const FormEmpresa = (props) => {
 							<Form.Label>Giro / Especialidad</Form.Label>
 							<Form.Control
 								as='select'
-								value={selectvalue}
+								value={item.giro}
 								onChange={(e) => {
-									setSelectvalue(e.currentTarget.value);
 									setItem({
 										...item,
 										giro: e.currentTarget.value,
@@ -426,6 +443,7 @@ const FormEmpresa = (props) => {
 								descripcion: str.currentTarget.value,
 							});
 						}}
+						value={item.descripcion}
 						required
 					/>
 				</Form.Group>
@@ -441,7 +459,7 @@ const FormEmpresa = (props) => {
 								}
 								onChange={handleImageChange}
 								custom
-								required
+								required={!modifying}
 							></Form.File>
 						</Form.Group>
 					</Col>
@@ -465,6 +483,7 @@ const FormEmpresa = (props) => {
 									});
 								}}
 								required
+								value={item.domicilio}
 							/>
 						</Form.Group>
 					</Col>
@@ -480,6 +499,7 @@ const FormEmpresa = (props) => {
 										colonia: str.currentTarget.value,
 									});
 								}}
+								value={item.colonia}
 								required
 							/>
 						</Form.Group>
@@ -498,6 +518,7 @@ const FormEmpresa = (props) => {
 										municipio: str.currentTarget.value,
 									});
 								}}
+								value={item.municipio}
 								required
 							/>
 						</Form.Group>
@@ -516,6 +537,7 @@ const FormEmpresa = (props) => {
 										cp: parseInt(str.currentTarget.value),
 									});
 								}}
+								value={item.cp || null}
 								required
 							/>
 							<Form.Control.Feedback type='invalid'>
@@ -539,6 +561,7 @@ const FormEmpresa = (props) => {
 										),
 									});
 								}}
+								value={item.telefono || null}
 								required
 							/>
 							<Form.Control.Feedback type='invalid'>
@@ -569,6 +592,7 @@ const FormEmpresa = (props) => {
 										email: str.currentTarget.value,
 									});
 								}}
+								value={item.email}
 								required
 							/>
 						</Form.Group>
@@ -587,6 +611,7 @@ const FormEmpresa = (props) => {
 										pagina_web: str.currentTarget.value,
 									});
 								}}
+								value={item.pagina_web}
 								required
 							/>
 							<Form.Control.Feedback type='invalid'>
@@ -619,6 +644,7 @@ const FormEmpresa = (props) => {
 										linkedin: str.currentTarget.value,
 									});
 								}}
+								value={item.linkedin}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -643,6 +669,7 @@ const FormEmpresa = (props) => {
 										facebook: str.currentTarget.value,
 									});
 								}}
+								value={item.facebook}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -669,6 +696,7 @@ const FormEmpresa = (props) => {
 										instagram: str.currentTarget.value,
 									});
 								}}
+								value={item.instagram}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -693,6 +721,7 @@ const FormEmpresa = (props) => {
 										youtube: str.currentTarget.value,
 									});
 								}}
+								value={item.youtube}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -725,6 +754,7 @@ const FormEmpresa = (props) => {
 										nombre_ceo: str.currentTarget.value,
 									});
 								}}
+								value={item.nombre_ceo}
 								required
 							/>
 						</Form.Group>
@@ -742,6 +772,7 @@ const FormEmpresa = (props) => {
 										email_ceo: str.currentTarget.value,
 									});
 								}}
+								value={item.email_ceo}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -764,6 +795,7 @@ const FormEmpresa = (props) => {
 										),
 									});
 								}}
+								value={item.tel_ceo || null}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -792,8 +824,11 @@ const FormEmpresa = (props) => {
 										nombre_cio: str.currentTarget.value,
 									});
 								}}
-								required
+								value={item.nombre_cio}
 							/>
+							<Form.Text className='text-muted'>
+								Opcional
+							</Form.Text>
 						</Form.Group>
 					</Col>
 
@@ -808,6 +843,7 @@ const FormEmpresa = (props) => {
 										email_cio: str.currentTarget.value,
 									});
 								}}
+								value={item.email_cio}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -830,6 +866,7 @@ const FormEmpresa = (props) => {
 										),
 									});
 								}}
+								value={item.tel_cio || null}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -861,6 +898,7 @@ const FormEmpresa = (props) => {
 										razon_social: str.currentTarget.value,
 									});
 								}}
+								value={item.razon_social}
 								required
 							/>
 						</Form.Group>
@@ -877,6 +915,7 @@ const FormEmpresa = (props) => {
 										servicios: str.currentTarget.value,
 									});
 								}}
+								value={item.servicios}
 								required
 							/>
 						</Form.Group>
@@ -909,6 +948,11 @@ const FormEmpresa = (props) => {
 									});
 								}}
 								required
+								value={
+									isNaN(item.num_emp_nl)
+										? null
+										: item.num_emp_nl
+								}
 							>
 								{getNumEmpleados()}
 							</Form.Control>
@@ -930,6 +974,11 @@ const FormEmpresa = (props) => {
 										),
 									});
 								}}
+								value={
+									isNaN(item.num_emp_mx)
+										? null
+										: item.num_emp_mx
+								}
 								required
 							>
 								{getNumEmpleados()}
@@ -952,6 +1001,11 @@ const FormEmpresa = (props) => {
 										),
 									});
 								}}
+								value={
+									isNaN(item.num_emp_nomx)
+										? null
+										: item.num_emp_nomx
+								}
 								required
 							>
 								{getNumEmpleados()}
@@ -977,6 +1031,11 @@ const FormEmpresa = (props) => {
 									});
 								}}
 								required
+								value={
+									isNaN(item.num_emp_ti)
+										? null
+										: item.num_emp_ti
+								}
 							>
 								{getNumEmpleados()}
 							</Form.Control>
@@ -1000,6 +1059,11 @@ const FormEmpresa = (props) => {
 										),
 									});
 								}}
+								value={
+									isNaN(item.num_emp_adm)
+										? null
+										: item.num_emp_adm
+								}
 								required
 							>
 								{getNumEmpleados()}
@@ -1031,6 +1095,7 @@ const FormEmpresa = (props) => {
 										ventas_nat: str.currentTarget.value,
 									});
 								}}
+								value={item.ventas_nat || null}
 								required
 							>
 								{getRangosVentas()}
@@ -1052,6 +1117,7 @@ const FormEmpresa = (props) => {
 											str.currentTarget.value,
 									});
 								}}
+								value={item.porcentaje_ventas_ext}
 								required
 							>
 								{getRangosVentas()}
@@ -1072,6 +1138,7 @@ const FormEmpresa = (props) => {
 										ventas_anuales: str.currentTarget.value,
 									});
 								}}
+								value={item.ventas_anuales}
 								required
 							>
 								{getRangosVentas()}
@@ -1142,11 +1209,16 @@ const FormEmpresa = (props) => {
 								onChange={(str) => {
 									setItem({
 										...item,
-										num_cert_empresas: parseInt(
+										num_cert_empresa: parseInt(
 											str.currentTarget.value
 										),
 									});
 								}}
+								value={
+									isNaN(item.num_cert_empresa)
+										? null
+										: item.num_cert_empresa
+								}
 								required
 							>
 								{getNumCertificaciones()}
@@ -1167,6 +1239,7 @@ const FormEmpresa = (props) => {
 										cert_empresa: str.currentTarget.value,
 									});
 								}}
+								value={item.cert_empresa}
 								required
 							/>
 						</Form.Group>
@@ -1191,11 +1264,16 @@ const FormEmpresa = (props) => {
 								onChange={(str) => {
 									setItem({
 										...item,
-										num_cert_empleados: parseInt(
+										num_cert_empleado: parseInt(
 											str.currentTarget.value
 										),
 									});
 								}}
+								value={
+									isNaN(item.num_cert_empleado)
+										? null
+										: item.num_cert_empleado
+								}
 								required
 							>
 								{getNumCertificaciones()}
@@ -1216,6 +1294,7 @@ const FormEmpresa = (props) => {
 										cert_empleado: str.currentTarget.value,
 									});
 								}}
+								value={item.cert_empleado}
 								required
 							/>
 						</Form.Group>

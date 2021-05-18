@@ -49,6 +49,10 @@ const App = () => {
 					<Route path='/admin-panel'>
 						<AdminPanel />
 					</Route>
+
+					<Route path='/modificar-empresa/:id'>
+						<FormEmpresa />
+					</Route>
 				</div>
 			</BrowserRouter>
 		</CurrentUserProvider>

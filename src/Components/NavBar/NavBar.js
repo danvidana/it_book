@@ -39,7 +39,17 @@ const NavBar = () => {
 					id='nav-dropdown'
 					alignRight
 				>
-					{currentUser.userData.hasEmpresa ? null : (
+					{currentUser.userData.hasEmpresa ? (
+						<NavDropdown.Item
+							as={Link}
+							to={
+								"/modificar-empresa/" +
+								currentUser.userData.empresaID
+							}
+						>
+							Modificar Empresa
+						</NavDropdown.Item>
+					) : (
 						<NavDropdown.Item as={Link} to='/registrar-empresa'>
 							Registrar Empresa
 						</NavDropdown.Item>
