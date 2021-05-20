@@ -118,24 +118,24 @@ const DetalleEmpresa = (props) => {
 				</Row>
 				<Row className='text-left h3'>Información de Contacto:</Row>
 				<Row>
-					<Col md='8' className=''>
+					<Col md='8' className='' style={{paddingTop:"5px", paddingBottom:"5px"}}>
 						<Row className='text-left row_contacto'>
-							<Col md='auto' className='row_descripcion '>
+							<Col xs='auto' style={{padding:"0px 5px"}} className='row_descripcion '>
 								E-mail:
 							</Col>
-							<Col md='auto'>{props.datosEmpresa.email}</Col>
+							<Col xs='auto' style={{padding:"0px 5px"}}>{props.datosEmpresa.email}</Col>
 						</Row>
 						<Row className='text-left row_contacto'>
-							<Col md='auto' className='row_descripcion'>
+							<Col xs='auto' style={{padding:"0px 5px"}} className='row_descripcion'>
 								Teléfono:
 							</Col>
-							<Col md='auto'>{props.datosEmpresa.telefono}</Col>
+							<Col xs='auto' style={{padding:"0px 5px"}}>{props.datosEmpresa.telefono}</Col>
 						</Row>
 						<Row className='text-left row_contacto'>
-							<Col md='auto' className='row_descripcion'>
+							<Col xs='auto' style={{padding:"0px 5px"}} className='row_descripcion'>
 								Dirección:
 							</Col>
-							<Col md='auto'>
+							<Col xs='auto' style={{padding:"0px 5px"}}>
 								{props.datosEmpresa.domicilio},{" "}
 								{props.datosEmpresa.colonia},{" "}
 								{props.datosEmpresa.municipio},{" "}
@@ -166,17 +166,17 @@ const DetalleEmpresa = (props) => {
 					</Col>
 				</Row>
 
-				<Row style={{ paddingTop: "10px" }}>
-					<Col xs='auto' style={{ padding: "0px 10px" }}>
+				<Row style={{ padding: "10px 0px" }}>
+					<Col xs='auto' style={{ padding: "0px 5px" }}>
 						{linkedin()}
 					</Col>
-					<Col xs='auto' style={{ padding: "0px 10px" }}>
+					<Col xs='auto' style={{ padding: "0px 5px" }}>
 						{facebook()}
 					</Col>
-					<Col xs='auto' style={{ padding: "0px 10px" }}>
+					<Col xs='auto' style={{ padding: "0px 5px" }}>
 						{instagram()}
 					</Col>
-					<Col xs='auto' style={{ padding: "0px 10px" }}>
+					<Col xs='auto' style={{ padding: "0px 5px" }}>
 						{youtube()}
 					</Col>
 				</Row>
