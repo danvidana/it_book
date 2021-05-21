@@ -22,8 +22,18 @@ hr {
     font-weight: 500;
 }
 
+.col_descripcion {
+    color: #f05d29;
+    font-weight: 500;
+}
+
 .btn-it-book {
     color: #fff !important;
     background-color: #f05d29 !important;
     border-color: #f05d29 !important;
+}
+
+.border-it_book {
+    border-color: #f05d29 !important;
+    border-bottom: 1px solid;
 }
