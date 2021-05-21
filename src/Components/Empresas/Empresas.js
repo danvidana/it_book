@@ -10,6 +10,7 @@ const Empresas = (props) => {
 	const firebase = useContext(FirebaseContext);
 	const [empresas, setEmpresa] = useState([]);
 	const [nombre, setNombre] = useState("");
+	const [giro, setGiro] = useState("");
 	const [lastItem, setLastItem] = useState("");
 	const [hasMore, setHasMore] = useState(true);
 	const [firstLoad, setFirstLoad] = useState(true);
@@ -28,11 +29,11 @@ const Empresas = (props) => {
 			clearTimeout(timeout);
 		};
 		// eslint-disable-next-line
-	}, [firebase, nombre, props.setEmpresa]);
+	}, [firebase, nombre, giro, props.setEmpresa]);
 
 	const retrieveData = () => {
-		console.log(nombre);
-		firebase.getEmpresasByName(nombre, maxItems).then((result) => {
+		console.log(giro);
+		firebase.getEmpresasByNameGiro(giro, nombre, maxItems).then((result) => {
 			const listaEmpresas = result.map((empresa) => {
 				return (
 					<Empresa
@@ -92,7 +93,7 @@ const Empresas = (props) => {
 
 	return (
 		<Fragment>
-			<SearchBar setName={setNombre} />
+			<SearchBar setName={setNombre} setGiro={setGiro} />
 			<Container style={{ minWidth: "90%" }}>
 				<InfiniteScroll
 					dataLength={empresas.length}
