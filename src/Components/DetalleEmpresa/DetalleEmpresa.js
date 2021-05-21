@@ -102,10 +102,10 @@ const DetalleEmpresa = (props) => {
 									<div className="font-weight-bold">
 										{props.datosEmpresa.nombre_ceo}
 									</div>
-									{(props.datosEmpresa.tel_ceo != 0 || props.datosEmpresa.tel_ceo != "") && <div>
+									{(props.datosEmpresa.tel_ceo !== 0) && <div>
 										{props.datosEmpresa.tel_ceo}
 									</div>}
-									{(props.datosEmpresa.email_ceo != "") && <div>
+									{(props.datosEmpresa.email_ceo !== "") && <div>
 										{props.datosEmpresa.email_ceo}
 									</div>}
 								</Col>
@@ -116,10 +116,10 @@ const DetalleEmpresa = (props) => {
 									<div className="font-weight-bold">
 										{props.datosEmpresa.nombre_cio}
 									</div>
-									{(props.datosEmpresa.tel_cio != 0 || props.datosEmpresa.tel_cio != "") && <div>
+									{(props.datosEmpresa.tel_cio !== 0) && <div>
 										{props.datosEmpresa.tel_ceo}
 									</div>}
-									{(props.datosEmpresa.email_cio != "") && <div>
+									{(props.datosEmpresa.email_cio !== "") && <div>
 										{props.datosEmpresa.email_cio}
 									</div>}
 								</Col>
@@ -188,7 +188,7 @@ const DetalleEmpresa = (props) => {
 										Extranjero
 									</div>
 									{props.datosEmpresa.ventas_ext !== "" &&  <div>{props.datosEmpresa.ventas_ext}</div>}
-									{props.datosEmpresa.ventas_ext == "" &&  <div>$0</div>}
+									{props.datosEmpresa.ventas_ext === "" &&  <div>$0</div>}
 
 								</Col>
 							</Row>
