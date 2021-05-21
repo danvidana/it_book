@@ -54,7 +54,7 @@ const FormEmpresa = () => {
 		ventas_anuales: "",
 		paises_exp_princ: [],
 		num_cert_empresa: NaN,
-		cert_empresa: "",
+		cert_empresa: [],
 		num_cert_empleado: NaN,
 		cert_empleado: "",
 	});
@@ -70,7 +70,7 @@ const FormEmpresa = () => {
 				"E-commerce",
 				"Desarrollo a la medida",
 			],
-			Servicios: [
+			"Servicios": [
 				"Facturación electrónica",
 				"Staffing",
 				"Software as a service",
@@ -81,7 +81,7 @@ const FormEmpresa = () => {
 				"Servicios de Telecomuicaciones",
 				"Streaming y desarrollo de eventos virtuales",
 			],
-			Hardware: ["Uso de PLC", "Redes industriales"],
+			"Hardware": ["Uso de PLC", "Redes industriales"],
 			"Tecnología 4.0": [
 				"3D Printing",
 				"Business Intelligence",
@@ -163,8 +163,59 @@ const FormEmpresa = () => {
 		{ value: 5 },
 		{ value: 10 },
 		{ value: 30 },
-		{ value: 50 },
+		{ value: 50 }
 	];
+
+	const dict_certEmpresas = useMemo(() => {
+		return [
+			{ 
+				label: "Google Certified Professional Cloud Architect",
+				value: "Google Certified Professional Cloud Architect" 
+			}, { 
+				label: "AWS Certified Solutions Architect – Associate",
+				value: "AWS Certified Solutions Architect – Associate" 
+			}, { 
+				label: "CISM – Certified Information Security Manager",
+				value: "CISM – Certified Information Security Manager" 
+			}, { 
+				label: "CRISC – Certified in Risk and Information Systems Control",
+				value: "CRISC – Certified in Risk and Information Systems Control" 
+			}, { 
+				label: "PMP® – Project Management Professional",
+				value: "PMP® – Project Management Professional" 
+			}, { 
+				label: "CISSP – Certified Information Systems Security Professional",
+				value: "CISSP – Certified Information Systems Security Professional" 
+			}, { 
+				label: "CISA – Certified Information Systems Auditor",
+				value: "CISA – Certified Information Systems Auditor" 
+			}, { 
+				label: "AWS Certified Cloud Practitioner",
+				value: "AWS Certified Cloud Practitioner" 
+			}, { 
+				label: "VCP6-DCV: VMware Certified Professional 6 – Data Center Virtualization",
+				value: "VCP6-DCV: VMware Certified Professional 6 – Data Center Virtualization" 
+			}, { 
+				label: "ITIL® Foundation",
+				value: "ITIL® Foundation" 
+			}, { 
+				label: "Microsoft Certified: Azure Fundamentals",
+				value: "Microsoft Certified: Azure Fundamentals" 
+			}, { 
+				label: "Microsoft Certified: Azure Administrator Associate",
+				value: "Microsoft Certified: Azure Administrator Associate" 
+			}, { 
+				label: "CCA-N: Citrix Certified Associate – Networking",
+				value: "CCA-N: Citrix Certified Associate – Networking" 
+			}, { 
+				label: "CCNP Routing and Switching",
+				value: "CCNP Routing and Switching" 
+			}, { 
+				label: "CCP-V: Citrix Certified Professional – Virtualization",
+				value: "CCP-V: Citrix Certified Professional – Virtualization"
+			}
+		];
+	}, []);
 
 	// regresa las opciones areas
 	const getAreas = function () {
@@ -317,6 +368,22 @@ const FormEmpresa = () => {
 				);
 			})
 		);
+	};
+
+	// Certificaciones empresa
+	const [certEmpresas, setCertEmpresas] = useState([]);
+
+	// guarda en un arreglo las certificaciones seleccionadas
+	const handleSelectCertEmpresas = (selectedOptions) => {
+		const selectedValues = selectedOptions.map((option) => {
+			return option.value;
+		});
+		// console.log(selectedOptions)
+		setCertEmpresas(selectedOptions);
+		setItem({
+			...item,
+			cert_empresa: selectedValues,
+		});
 	};
 
 	// función para subir cambios a la base de datos
@@ -615,7 +682,7 @@ const FormEmpresa = () => {
 								required
 							/>
 							<Form.Control.Feedback type='invalid'>
-								Url no es válido
+								Url no es válido (http://www.ejemplo.com)
 							</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
@@ -938,7 +1005,7 @@ const FormEmpresa = () => {
 							<Form.Control
 								// placeholder='# empleados en Nuevo León'
 								as='select'
-								defaultValue=''
+								// defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -965,7 +1032,7 @@ const FormEmpresa = () => {
 							<Form.Control
 								placeholder='# empleados en México'
 								as='select'
-								defaultValue=''
+								// defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -992,7 +1059,7 @@ const FormEmpresa = () => {
 							<Form.Control
 								placeholder='# empleados fuera de México'
 								as='select'
-								defaultValue=''
+								// defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -1021,7 +1088,7 @@ const FormEmpresa = () => {
 							<Form.Control
 								placeholder='# empleados en TI'
 								as='select'
-								defaultValue=''
+								// defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -1050,7 +1117,7 @@ const FormEmpresa = () => {
 							<Form.Control
 								placeholder='# empleados en Administración'
 								as='select'
-								defaultValue=''
+								// defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -1088,7 +1155,7 @@ const FormEmpresa = () => {
 							<Form.Control
 								placeholder='Ventas nacionales'
 								as='select'
-								defaultValue=''
+								// defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -1109,7 +1176,7 @@ const FormEmpresa = () => {
 							<Form.Control
 								placeholder='Ventas en el extranjero'
 								as='select'
-								defaultValue=''
+								// defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -1131,7 +1198,7 @@ const FormEmpresa = () => {
 							<Form.Control
 								placeholder='Ventas anuales'
 								as='select'
-								defaultValue=''
+								// defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -1205,7 +1272,7 @@ const FormEmpresa = () => {
 							<Form.Label>Número de Certificaciones</Form.Label>
 							<Form.Control
 								as='select'
-								defaultValue=''
+								// defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
@@ -1231,7 +1298,25 @@ const FormEmpresa = () => {
 							<Form.Label>
 								Certificaciones de la empresa
 							</Form.Label>
-							<Form.Control
+							<MultiSelect
+								overrideStrings={{
+									selectSomeItems: "Selecciona las certificaciones",
+									allItemsAreSelected: "Todos",
+									selectAll: "Todos",
+									search: "Buscar",
+								}}
+								options={dict_certEmpresas}
+								value={certEmpresas}
+								onChange={handleSelectCertEmpresas}
+								// onChange={(str) => {
+								// 	setItem({
+								// 		...item,
+								// 		paises_exp_princ: str.currentTarget.value,
+								// 	});
+								// }}
+								required
+							/>
+							{/* <Form.Control
 								placeholder='Ej. PMP, CISSP, MCSD, ITIL...'
 								onChange={(str) => {
 									setItem({
@@ -1241,7 +1326,21 @@ const FormEmpresa = () => {
 								}}
 								value={item.cert_empresa}
 								required
-							/>
+							/> */}
+							<Form.Check>
+								<Form.Check.Input
+									checked={
+										certEmpresas != null &&
+										certEmpresas.length > 0
+									}
+									onChange={() => {}}
+									style={{ display: "none" }}
+									required
+								/>
+								<Form.Control.Feedback type='invalid'>
+									Seleccionar una o más certificaciones
+								</Form.Control.Feedback>
+							</Form.Check>
 						</Form.Group>
 					</Col>
 				</Row>
@@ -1260,7 +1359,7 @@ const FormEmpresa = () => {
 							<Form.Label>Número de certificaciones</Form.Label>
 							<Form.Control
 								as='select'
-								defaultValue=''
+								// defaultValue=''
 								onChange={(str) => {
 									setItem({
 										...item,
