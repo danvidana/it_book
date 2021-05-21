@@ -106,24 +106,75 @@ class Firebase {
 		return empresa;
 	};
 
-	getEmpresasByName = async (name, limit) => {
-		if (name === "") {
-			const empresas = await this.firestore
-				.collection("Empresas")
-				.orderBy("nombre_comercial")
-				.limit(limit)
-				.get();
+	getEmpresasByGiro = async (giro) => {
+		const empresas = await this.firestore
+			.collection("Empresas")
+			.where("giro", "==", giro)
+			.get();
+		console.log(empresas)
+		if(empresas["docs"].length === 0) {
+			return this.getAllEmpresas()
+		} else {
 			return empresas.docs.map((doc) => {
 				var data = doc.data();
 				data.id = doc.id;
 				return data;
 			});
+		}
+	};
+
+	// getEmpresasByName = async (name, limit) => {
+	// 	if (name === "") {
+	// 		const empresas = await this.firestore
+	// 			.collection("Empresas")
+	// 			.orderBy("nombre_comercial")
+	// 			.limit(limit)
+	// 			.get();
+	// 		return empresas.docs.map((doc) => {
+	// 			var data = doc.data();
+	// 			data.id = doc.id;
+	// 			return data;
+	// 		});
+	// 	} else {
+	// 		const empresas = await this.firestore
+	// 			.collection("Empresas")
+	// 			.where('keyword','array-contains',name.toLowerCase())
+	// 			.limit(limit)
+	// 			.get();
+	// 		return empresas.docs.map((doc) => {
+	// 			var data = doc.data();
+	// 			data.id = doc.id;
+	// 			return data;
+	// 		});
+	// 	}
+	// };
+
+	getEmpresasByName = async (name, limit) => {
+		const empresas = await this.firestore
+			.collection("Empresas")
+			.where('keyword','array-contains',name.toLowerCase())
+			.limit(limit)
+			.get();
+		return empresas.docs.map((doc) => {
+			var data = doc.data();
+			data.id = doc.id;
+			return data;
+		});
+	};
+
+	getEmpresasByNameGiro = async (giro, name, limit) => {
+		if(giro === "" && name === "") {
+			return this.getAllEmpresas()
+		} else if(giro === "" && name !== "") {
+			return this.getEmpresasByName(name, limit)
+		} else if(giro !== "" && name === "") {
+			return this.getEmpresasByGiro(giro)
 		} else {
 			const empresas = await this.firestore
-				.collection("Empresas")
-				.where('keyword','array-contains',name.toLowerCase())
-				.limit(limit)
-				.get();
+			.collection("Empresas")
+			.where("giro", "==", giro)
+			.where('keyword','array-contains',name.toLowerCase())
+			.get();
 			return empresas.docs.map((doc) => {
 				var data = doc.data();
 				data.id = doc.id;
