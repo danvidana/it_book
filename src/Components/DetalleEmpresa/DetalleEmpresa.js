@@ -95,7 +95,7 @@ const DetalleEmpresa = (props) => {
 					<Row>
 						<Col className='mb-4' stule={{padding: "0px 20px"}}>
 							<Row className='row_contacto mt-3 mb-1'>
-								<Col style={{padding:"0px 5px"}}>
+								<Col sm='6'>
 									<div className='row_descripcion border-it_book font-weight-bold'>
 										CEO
 									</div>
@@ -109,7 +109,7 @@ const DetalleEmpresa = (props) => {
 										{props.datosEmpresa.email_ceo}
 									</div>}
 								</Col>
-								<Col style={{padding:"0px 5px"}}>
+								<Col sm='6'>
 									<div className='row_descripcion border-it_book font-weight-bold'>
 										CIO
 									</div>
@@ -124,45 +124,39 @@ const DetalleEmpresa = (props) => {
 									</div>}
 								</Col>
 							</Row>
-							<Col className='mb-4'>
-								<div className='col_descripcion'>
-									Teléfono Directo
-								</div>
-								<div>
-									{props.datosEmpresa.telefono}
-								</div>
-							</Col>
-							<Row className='justify-content-center h4'>Empleados</Row>
+							<Row className='justify-content-center' style={{padding:"10px"}}><h4>Empleados</h4></Row>
 							<Row>
-								<Col>
+								<Col sm='4'>
 									<div className='col_descripcion border-it_book'>
 										En México
 									</div>
 									<div>{props.datosEmpresa.num_emp_mx}</div>
 								</Col>
 									
-								<Col>
+								<Col sm='4'>
 									<div className='col_descripcion border-it_book'>
 										En Nuevo León
 									</div>
 									<div>{props.datosEmpresa.num_emp_nl}</div>
 								</Col>
-								<Col>
+								<Col sm='4'>
 									<div className='col_descripcion border-it_book'>
 										Fuera de México
 									</div>
 									<div>{props.datosEmpresa.num_emp_nomx}</div>
 								</Col>
-								<Col>
+								
+							</Row>
+							<Row className='justify-content-center mb-4'>
+								<Col sm='4'>
 									<div className='col_descripcion border-it_book'>
 										En área de TI
 									</div>
 									<div>{props.datosEmpresa.num_emp_ti}</div>
 								</Col>
-							</Row>
-							<Row className='justify-content-center mb-4'>
-								<Col>
-									<div className='col_descripcion border-it_book' style={{margin: "0 38%"}}>
+								
+								<Col sm='4'>
+									<div className='col_descripcion border-it_book'>
 										Administradores
 									</div>
 									<div>{props.datosEmpresa.num_emp_adm}</div>
@@ -194,41 +188,32 @@ const DetalleEmpresa = (props) => {
 							</Row>
 							<Row className='justify-content-center h4'>Certificaciones</Row>
 							<Row className='mb-3'>
-								<Col>
+								<Col sm='6'>
 									<div className='col_descripcion border-it_book'>
 										Certificaciones de la empresa
+									</div>
+									<div>
+										<span className='col_descripcion'>Cantidad:</span> {props.datosEmpresa.num_cert_empresa}
 									</div>
 									<div>
 										{Object.entries(
 											props.datosEmpresa.cert_empresa
 										).map(function ([index, value]) {
-											if (
-												index <
-												props.datosEmpresa.cert_empresa.length -
-													1
-											) {
-												return value + " | ";
-											}
 
-											return value;
+											return <p style={{margin:"0px"}}>{value}</p>;
 										})}
 									</div>
-									<div className='col_descripcion'>
-										Cantidad
-									</div>
-									<div>{props.datosEmpresa.num_cert_empresa}</div>
 								</Col>
-								<Col>
+								<Col sm='6'>
 									<div className='col_descripcion border-it_book'>
 										Certificaciones de empleados
 									</div>
 									<div>
+									<span className='col_descripcion'>Cantidad:</span>  {props.datosEmpresa.num_cert_empleado}
+									</div>
+									<div>
 										{props.datosEmpresa.cert_empleado}
 									</div>
-									<div className='col_descripcion'>
-										Cantidad
-									</div>
-									<div>{props.datosEmpresa.num_cert_empleado}</div>
 								</Col>
 							</Row>
 						</Col>
