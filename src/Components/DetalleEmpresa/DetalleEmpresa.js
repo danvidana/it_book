@@ -85,7 +85,7 @@ const DetalleEmpresa = (props) => {
 	};
 
 	const privInfoSection = () => {
-		if ((currentUser.userData.isAdmin || currentUser.userData.isSubadmin) || (currentUser.userData.empresaID == props.datosEmpresa.id)) {
+		if ((currentUser.userData.isAdmin || currentUser.userData.isSubadmin) || (currentUser.userData.empresaID === props.datosEmpresa.id)) {
 			return (
 				<div>
 					<hr></hr>
