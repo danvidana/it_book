@@ -11,8 +11,6 @@ import "./DetalleEmpresa.css";
 
 const DetalleEmpresa = (props) => {
 	const { currentUser } = React.useContext(CurrentUserContext);
-	console.log(currentUser);
-	console.log(props.datosEmpresa);
 
 	const facebook = () => {
 		if (props.datosEmpresa.facebook !== "") {
@@ -87,7 +85,7 @@ const DetalleEmpresa = (props) => {
 	};
 
 	const privInfoSection = () => {
-		if (currentUser.userData.isAdmin) {
+		if ((currentUser.userData.isAdmin || currentUser.userData.isSubadmin) || (currentUser.userData.empresaID == props.datosEmpresa.id)) {
 			return (
 				<div>
 					<hr></hr>
