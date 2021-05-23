@@ -87,44 +87,57 @@ const DetalleEmpresa = (props) => {
 	};
 
 	const privInfoSection = () => {
-		if (currentUser.userData.isAdmin) {
+		if (
+			currentUser.userData.isAdmin ||
+			currentUser.userData.isSubadmin ||
+			currentUser.userData.empresaID === props.datosEmpresa.id
+		) {
 			return (
 				<div>
 					<hr></hr>
 					<Row className='text-left h3'>Información Privada:</Row>
 					<Row>
-						<Col className='mb-4' stule={{padding: "0px 20px"}}>
+						<Col className='mb-4' stule={{ padding: "0px 20px" }}>
 							<Row className='row_contacto mt-3 mb-1'>
 								<Col sm='6'>
 									<div className='row_descripcion border-it_book font-weight-bold'>
 										CEO
 									</div>
-									<div className="font-weight-bold">
+									<div className='font-weight-bold'>
 										{props.datosEmpresa.nombre_ceo}
 									</div>
-									{(props.datosEmpresa.tel_ceo !== 0) && <div>
-										{props.datosEmpresa.tel_ceo}
-									</div>}
-									{(props.datosEmpresa.email_ceo !== "") && <div>
-										{props.datosEmpresa.email_ceo}
-									</div>}
+									{props.datosEmpresa.tel_ceo !== 0 && (
+										<div>{props.datosEmpresa.tel_ceo}</div>
+									)}
+									{props.datosEmpresa.email_ceo !== "" && (
+										<div>
+											{props.datosEmpresa.email_ceo}
+										</div>
+									)}
 								</Col>
 								<Col sm='6'>
 									<div className='row_descripcion border-it_book font-weight-bold'>
 										CIO
 									</div>
-									<div className="font-weight-bold">
+									<div className='font-weight-bold'>
 										{props.datosEmpresa.nombre_cio}
 									</div>
-									{(props.datosEmpresa.tel_cio !== 0) && <div>
-										{props.datosEmpresa.tel_ceo}
-									</div>}
-									{(props.datosEmpresa.email_cio !== "") && <div>
-										{props.datosEmpresa.email_cio}
-									</div>}
+									{props.datosEmpresa.tel_cio !== 0 && (
+										<div>{props.datosEmpresa.tel_ceo}</div>
+									)}
+									{props.datosEmpresa.email_cio !== "" && (
+										<div>
+											{props.datosEmpresa.email_cio}
+										</div>
+									)}
 								</Col>
 							</Row>
-							<Row className='justify-content-center' style={{padding:"10px"}}><h4>Empleados</h4></Row>
+							<Row
+								className='justify-content-center'
+								style={{ padding: "10px" }}
+							>
+								<h4>Empleados</h4>
+							</Row>
 							<Row>
 								<Col sm='4'>
 									<div className='col_descripcion border-it_book'>
@@ -132,7 +145,7 @@ const DetalleEmpresa = (props) => {
 									</div>
 									<div>{props.datosEmpresa.num_emp_mx}</div>
 								</Col>
-									
+
 								<Col sm='4'>
 									<div className='col_descripcion border-it_book'>
 										En Nuevo León
@@ -145,7 +158,6 @@ const DetalleEmpresa = (props) => {
 									</div>
 									<div>{props.datosEmpresa.num_emp_nomx}</div>
 								</Col>
-								
 							</Row>
 							<Row className='justify-content-center mb-4'>
 								<Col sm='4'>
@@ -154,7 +166,7 @@ const DetalleEmpresa = (props) => {
 									</div>
 									<div>{props.datosEmpresa.num_emp_ti}</div>
 								</Col>
-								
+
 								<Col sm='4'>
 									<div className='col_descripcion border-it_book'>
 										Administradores
@@ -162,15 +174,19 @@ const DetalleEmpresa = (props) => {
 									<div>{props.datosEmpresa.num_emp_adm}</div>
 								</Col>
 							</Row>
-							<Row className='justify-content-center h4'>Ventas</Row>
+							<Row className='justify-content-center h4'>
+								Ventas
+							</Row>
 							<Row className='mb-4'>
 								<Col>
 									<div className='col_descripcion border-it_book'>
 										Anuales
 									</div>
-									<div>{props.datosEmpresa.ventas_anuales}</div>
+									<div>
+										{props.datosEmpresa.ventas_anuales}
+									</div>
 								</Col>
-									
+
 								<Col>
 									<div className='col_descripcion border-it_book'>
 										Nacionales
@@ -181,26 +197,39 @@ const DetalleEmpresa = (props) => {
 									<div className='col_descripcion border-it_book'>
 										Extranjero
 									</div>
-									{props.datosEmpresa.ventas_ext !== "" &&  <div>{props.datosEmpresa.ventas_ext}</div>}
-									{props.datosEmpresa.ventas_ext === "" &&  <div>$0</div>}
-
+									{props.datosEmpresa.ventas_ext !== "" && (
+										<div>
+											{props.datosEmpresa.ventas_ext}
+										</div>
+									)}
+									{props.datosEmpresa.ventas_ext === "" && (
+										<div>$0</div>
+									)}
 								</Col>
 							</Row>
-							<Row className='justify-content-center h4'>Certificaciones</Row>
+							<Row className='justify-content-center h4'>
+								Certificaciones
+							</Row>
 							<Row className='mb-3'>
 								<Col sm='6'>
 									<div className='col_descripcion border-it_book'>
 										Certificaciones de la empresa
 									</div>
 									<div>
-										<span className='col_descripcion'>Cantidad:</span> {props.datosEmpresa.num_cert_empresa}
+										<span className='col_descripcion'>
+											Cantidad:
+										</span>{" "}
+										{props.datosEmpresa.num_cert_empresa}
 									</div>
 									<div>
 										{Object.entries(
 											props.datosEmpresa.cert_empresa
 										).map(function ([index, value]) {
-
-											return <p style={{margin:"0px"}}>{value}</p>;
+											return (
+												<p style={{ margin: "0px" }}>
+													{value}
+												</p>
+											);
 										})}
 									</div>
 								</Col>
@@ -209,7 +238,10 @@ const DetalleEmpresa = (props) => {
 										Certificaciones de empleados
 									</div>
 									<div>
-									<span className='col_descripcion'>Cantidad:</span>  {props.datosEmpresa.num_cert_empleado}
+										<span className='col_descripcion'>
+											Cantidad:
+										</span>{" "}
+										{props.datosEmpresa.num_cert_empleado}
 									</div>
 									<div>
 										{props.datosEmpresa.cert_empleado}
@@ -221,7 +253,7 @@ const DetalleEmpresa = (props) => {
 				</div>
 			);
 		}
-	}
+	};
 
 	return (
 		<Container>
@@ -260,24 +292,44 @@ const DetalleEmpresa = (props) => {
 				</Row>
 				<Row className='text-left h3'>Información de Contacto:</Row>
 				<Row className='mb-2'>
-					<Col md='8' className='' style={{paddingTop:"5px", paddingBottom:"5px"}}>
+					<Col
+						md='8'
+						className=''
+						style={{ paddingTop: "5px", paddingBottom: "5px" }}
+					>
 						<Row className='text-left row_contacto'>
-							<Col xs='3' style={{padding:"0px 5px"}} className='row_descripcion '>
+							<Col
+								xs='3'
+								style={{ padding: "0px 5px" }}
+								className='row_descripcion '
+							>
 								E-mail:
 							</Col>
-							<Col xs='9' style={{padding:"0px 5px"}}>{props.datosEmpresa.email}</Col>
+							<Col xs='9' style={{ padding: "0px 5px" }}>
+								{props.datosEmpresa.email}
+							</Col>
 						</Row>
 						<Row className='text-left row_contacto'>
-							<Col xs='3' style={{padding:"0px 5px"}} className='row_descripcion'>
+							<Col
+								xs='3'
+								style={{ padding: "0px 5px" }}
+								className='row_descripcion'
+							>
 								Teléfono:
 							</Col>
-							<Col xs='9' style={{padding:"0px 5px"}}>{props.datosEmpresa.telefono}</Col>
+							<Col xs='9' style={{ padding: "0px 5px" }}>
+								{props.datosEmpresa.telefono}
+							</Col>
 						</Row>
 						<Row className='text-left row_contacto'>
-							<Col xs='3' style={{padding:"0px 5px"}} className='row_descripcion'>
+							<Col
+								xs='3'
+								style={{ padding: "0px 5px" }}
+								className='row_descripcion'
+							>
 								Dirección:
 							</Col>
-							<Col xs='9' style={{padding:"0px 5px"}}>
+							<Col xs='9' style={{ padding: "0px 5px" }}>
 								{props.datosEmpresa.domicilio},{" "}
 								{props.datosEmpresa.colonia},{" "}
 								{props.datosEmpresa.municipio},{" "}
