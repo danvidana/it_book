@@ -14,6 +14,7 @@ const Empresas = (props) => {
 	const [lastItem, setLastItem] = useState("");
 	const [hasMore, setHasMore] = useState(true);
 	const [firstLoad, setFirstLoad] = useState(true);
+	const [msgEmpresas, setMsgEmpresas] = useState("")
 
 	useEffect(() => {
 		let timer = 500;
@@ -34,6 +35,12 @@ const Empresas = (props) => {
 	const retrieveData = () => {
 		console.log(giro);
 		firebase.getEmpresasByNameGiro(giro, nombre, maxItems).then((result) => {
+			if(result.length === 0) {
+				setMsgEmpresas("No se encontraron empresas")
+			} 
+			else {
+				setMsgEmpresas("")
+			}
 			const listaEmpresas = result.map((empresa) => {
 				return (
 					<Empresa
@@ -95,6 +102,7 @@ const Empresas = (props) => {
 		<Fragment>
 			<SearchBar setName={setNombre} setGiro={setGiro} />
 			<Container style={{ minWidth: "90%" }}>
+				<small>{msgEmpresas}</small>
 				<InfiniteScroll
 					dataLength={empresas.length}
 					next={() => {

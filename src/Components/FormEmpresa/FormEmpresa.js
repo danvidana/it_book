@@ -29,7 +29,7 @@ const FormEmpresa = () => {
 		colonia: "",
 		municipio: "",
 		cp: "",
-		telefono: 0,
+		telefono: "",
 		email: "",
 		pagina_web: "",
 		nombre_ceo: "",
@@ -70,7 +70,7 @@ const FormEmpresa = () => {
 				"E-commerce",
 				"Desarrollo a la medida",
 			],
-			"Servicios": [
+			Servicios: [
 				"Facturación electrónica",
 				"Staffing",
 				"Software as a service",
@@ -81,7 +81,7 @@ const FormEmpresa = () => {
 				"Servicios de Telecomuicaciones",
 				"Streaming y desarrollo de eventos virtuales",
 			],
-			"Hardware": ["Uso de PLC", "Redes industriales"],
+			Hardware: ["Uso de PLC", "Redes industriales"],
 			"Tecnología 4.0": [
 				"3D Printing",
 				"Business Intelligence",
@@ -111,6 +111,22 @@ const FormEmpresa = () => {
 						}
 					);
 					setArrayCountries(arrayCountries);
+					setCertEmpleado(
+						empresa.cert_empleado.map((certificacion) => {
+							return {
+								value: certificacion,
+								label: certificacion,
+							};
+						})
+					);
+					setCertEmpresas(
+						empresa.cert_empresa.map((certificacion) => {
+							return {
+								value: certificacion,
+								label: certificacion,
+							};
+						})
+					);
 				});
 		}
 	}, [currentUser.userData.empresaID, firebase, modifying, dict_giros]);
@@ -163,57 +179,98 @@ const FormEmpresa = () => {
 		{ value: 5 },
 		{ value: 10 },
 		{ value: 30 },
-		{ value: 50 }
+		{ value: 50 },
 	];
+
+	const dict_certEmpleado = useMemo(() => {
+		return [
+			{
+				label: "Google Certified Professional Cloud Architect",
+				value: "Google Certified Professional Cloud Architect",
+			},
+			{
+				label: "AWS Certified Solutions Architect – Associate",
+				value: "AWS Certified Solutions Architect – Associate",
+			},
+			{
+				label: "CISM – Certified Information Security Manager",
+				value: "CISM – Certified Information Security Manager",
+			},
+			{
+				label: "CRISC – Certified in Risk and Information Systems Control",
+				value: "CRISC – Certified in Risk and Information Systems Control",
+			},
+			{
+				label: "PMP® – Project Management Professional",
+				value: "PMP® – Project Management Professional",
+			},
+			{
+				label: "CISSP – Certified Information Systems Security Professional",
+				value: "CISSP – Certified Information Systems Security Professional",
+			},
+			{
+				label: "CISA – Certified Information Systems Auditor",
+				value: "CISA – Certified Information Systems Auditor",
+			},
+			{
+				label: "AWS Certified Cloud Practitioner",
+				value: "AWS Certified Cloud Practitioner",
+			},
+			{
+				label: "VCP6-DCV: VMware Certified Professional 6 – Data Center Virtualization",
+				value: "VCP6-DCV: VMware Certified Professional 6 – Data Center Virtualization",
+			},
+			{
+				label: "ITIL® Foundation",
+				value: "ITIL® Foundation",
+			},
+			{
+				label: "Microsoft Certified: Azure Fundamentals",
+				value: "Microsoft Certified: Azure Fundamentals",
+			},
+			{
+				label: "Microsoft Certified: Azure Administrator Associate",
+				value: "Microsoft Certified: Azure Administrator Associate",
+			},
+			{
+				label: "CCA-N: Citrix Certified Associate – Networking",
+				value: "CCA-N: Citrix Certified Associate – Networking",
+			},
+			{
+				label: "CCNP Routing and Switching",
+				value: "CCNP Routing and Switching",
+			},
+			{
+				label: "CCP-V: Citrix Certified Professional – Virtualization",
+				value: "CCP-V: Citrix Certified Professional – Virtualization",
+			},
+		];
+	}, []);
 
 	const dict_certEmpresas = useMemo(() => {
 		return [
 			{ 
-				label: "Google Certified Professional Cloud Architect",
-				value: "Google Certified Professional Cloud Architect" 
+				label: "CMMI Nivel 2",
+				value: "CMMI Nivel 2" 
 			}, { 
-				label: "AWS Certified Solutions Architect – Associate",
-				value: "AWS Certified Solutions Architect – Associate" 
+				label: "CMMI Nivel 3",
+				value: "CMMI Nivel 3" 
 			}, { 
-				label: "CISM – Certified Information Security Manager",
-				value: "CISM – Certified Information Security Manager" 
+				label: "CMMI Nivel 5",
+				value: "CMMI Nivel 5" 
 			}, { 
-				label: "CRISC – Certified in Risk and Information Systems Control",
-				value: "CRISC – Certified in Risk and Information Systems Control" 
+				label: "ISO 27001",
+				value: "ISO 27001" 
 			}, { 
-				label: "PMP® – Project Management Professional",
-				value: "PMP® – Project Management Professional" 
+				label: "ISO 29110",
+				value: "ISO 29110" 
 			}, { 
-				label: "CISSP – Certified Information Systems Security Professional",
-				value: "CISSP – Certified Information Systems Security Professional" 
+				label: "TSP",
+				value: "TSP" 
 			}, { 
-				label: "CISA – Certified Information Systems Auditor",
-				value: "CISA – Certified Information Systems Auditor" 
-			}, { 
-				label: "AWS Certified Cloud Practitioner",
-				value: "AWS Certified Cloud Practitioner" 
-			}, { 
-				label: "VCP6-DCV: VMware Certified Professional 6 – Data Center Virtualization",
-				value: "VCP6-DCV: VMware Certified Professional 6 – Data Center Virtualization" 
-			}, { 
-				label: "ITIL® Foundation",
-				value: "ITIL® Foundation" 
-			}, { 
-				label: "Microsoft Certified: Azure Fundamentals",
-				value: "Microsoft Certified: Azure Fundamentals" 
-			}, { 
-				label: "Microsoft Certified: Azure Administrator Associate",
-				value: "Microsoft Certified: Azure Administrator Associate" 
-			}, { 
-				label: "CCA-N: Citrix Certified Associate – Networking",
-				value: "CCA-N: Citrix Certified Associate – Networking" 
-			}, { 
-				label: "CCNP Routing and Switching",
-				value: "CCNP Routing and Switching" 
-			}, { 
-				label: "CCP-V: Citrix Certified Professional – Virtualization",
-				value: "CCP-V: Citrix Certified Professional – Virtualization"
-			}
+				label: "PSP",
+				value: "PSP" 
+			},
 		];
 	}, []);
 
@@ -383,6 +440,22 @@ const FormEmpresa = () => {
 		setItem({
 			...item,
 			cert_empresa: selectedValues,
+		});
+	};
+
+	// Certificaciones empleados
+	const [certEmpleado, setCertEmpleado] = useState([]);
+
+	// guarda en un arreglo las certificaciones seleccionadas
+	const handleSelectCertEmpleado = (selectedOptions) => {
+		const selectedValues = selectedOptions.map((option) => {
+			return option.value;
+		});
+		// console.log(selectedOptions)
+		setCertEmpleado(selectedOptions);
+		setItem({
+			...item,
+			cert_empleado: selectedValues,
 		});
 	};
 
@@ -604,7 +677,7 @@ const FormEmpresa = () => {
 										cp: parseInt(str.currentTarget.value),
 									});
 								}}
-								value={item.cp || null}
+								value={item.cp || ""}
 								required
 							/>
 							<Form.Control.Feedback type='invalid'>
@@ -628,7 +701,7 @@ const FormEmpresa = () => {
 										),
 									});
 								}}
-								value={item.telefono || null}
+								value={item.telefono || ""}
 								required
 							/>
 							<Form.Control.Feedback type='invalid'>
@@ -862,7 +935,7 @@ const FormEmpresa = () => {
 										),
 									});
 								}}
-								value={item.tel_ceo || null}
+								value={item.tel_ceo || ""}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -933,7 +1006,7 @@ const FormEmpresa = () => {
 										),
 									});
 								}}
-								value={item.tel_cio || null}
+								value={item.tel_cio || ""}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -1017,7 +1090,7 @@ const FormEmpresa = () => {
 								required
 								value={
 									isNaN(item.num_emp_nl)
-										? null
+										? ""
 										: item.num_emp_nl
 								}
 							>
@@ -1043,7 +1116,7 @@ const FormEmpresa = () => {
 								}}
 								value={
 									isNaN(item.num_emp_mx)
-										? null
+										? ""
 										: item.num_emp_mx
 								}
 								required
@@ -1070,7 +1143,7 @@ const FormEmpresa = () => {
 								}}
 								value={
 									isNaN(item.num_emp_nomx)
-										? null
+										? ""
 										: item.num_emp_nomx
 								}
 								required
@@ -1100,7 +1173,7 @@ const FormEmpresa = () => {
 								required
 								value={
 									isNaN(item.num_emp_ti)
-										? null
+										? ""
 										: item.num_emp_ti
 								}
 							>
@@ -1128,7 +1201,7 @@ const FormEmpresa = () => {
 								}}
 								value={
 									isNaN(item.num_emp_adm)
-										? null
+										? ""
 										: item.num_emp_adm
 								}
 								required
@@ -1142,9 +1215,9 @@ const FormEmpresa = () => {
 				<h6>Ventas</h6>
 
 				<p>
-					<small>
+				<small>
 						Seleccione el rango de ventas que mejor corresponda para
-						cada opción.
+						cada opción. La unidadades de ventas están en dólares estadounidenses (USD).
 					</small>
 				</p>
 
@@ -1162,7 +1235,7 @@ const FormEmpresa = () => {
 										ventas_nat: str.currentTarget.value,
 									});
 								}}
-								value={item.ventas_nat || null}
+								value={item.ventas_nat}
 								required
 							>
 								{getRangosVentas()}
@@ -1180,11 +1253,11 @@ const FormEmpresa = () => {
 								onChange={(str) => {
 									setItem({
 										...item,
-										porcentaje_ventas_ext:
+										ventas_ext:
 											str.currentTarget.value,
 									});
 								}}
-								value={item.porcentaje_ventas_ext}
+								value={item.ventas_ext}
 								required
 							>
 								{getRangosVentas()}
@@ -1283,7 +1356,7 @@ const FormEmpresa = () => {
 								}}
 								value={
 									isNaN(item.num_cert_empresa)
-										? null
+										? ""
 										: item.num_cert_empresa
 								}
 								required
@@ -1294,7 +1367,7 @@ const FormEmpresa = () => {
 					</Col>
 
 					<Col md={8}>
-						<Form.Group controlId=''>
+					<Form.Group controlId=''>
 							<Form.Label>
 								Certificaciones de la empresa
 							</Form.Label>
@@ -1330,7 +1403,6 @@ const FormEmpresa = () => {
 							<Form.Check>
 								<Form.Check.Input
 									checked={
-										certEmpresas != null &&
 										certEmpresas.length > 0
 									}
 									onChange={() => {}}
@@ -1370,7 +1442,7 @@ const FormEmpresa = () => {
 								}}
 								value={
 									isNaN(item.num_cert_empleado)
-										? null
+										? ""
 										: item.num_cert_empleado
 								}
 								required
@@ -1385,17 +1457,38 @@ const FormEmpresa = () => {
 							<Form.Label>
 								Certificaciones de los empleados
 							</Form.Label>
-							<Form.Control
-								placeholder='Ej. FITSP, CompTIA A+ Essentials...'
-								onChange={(str) => {
-									setItem({
-										...item,
-										cert_empleado: str.currentTarget.value,
-									});
+							<MultiSelect
+								overrideStrings={{
+									selectSomeItems:
+										"Selecciona las certificaciones",
+									allItemsAreSelected: "Todos",
+									selectAll: "Todos",
+									search: "Buscar",
 								}}
-								value={item.cert_empleado}
+								options={dict_certEmpleado}
+								value={certEmpleado}
+								onChange={handleSelectCertEmpleado}
+								// onChange={(str) => {
+								// 	setItem({
+								// 		...item,
+								// 		paises_exp_princ: str.currentTarget.value,
+								// 	});
+								// }}
 								required
 							/>
+							<Form.Check>
+								<Form.Check.Input
+									checked={
+										certEmpleado.length > 0
+									}
+									onChange={() => {}}
+									style={{ display: "none" }}
+									required
+								/>
+								<Form.Control.Feedback type='invalid'>
+									Seleccionar una o más certificaciones
+								</Form.Control.Feedback>
+							</Form.Check>
 						</Form.Group>
 					</Col>
 				</Row>
