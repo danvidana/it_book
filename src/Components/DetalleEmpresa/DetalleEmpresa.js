@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { Col } from "react-bootstrap";
 // import businessImg from "../../images/detalleEmpresa_business.jpg";
@@ -8,17 +8,33 @@ import linkedinIcon from "../../images/linkedin.png";
 import youtubeIcon from "../../images/youtube.png";
 import { CurrentUserContext } from "../../CurrentUserContext";
 import "./DetalleEmpresa.css";
+import { FirebaseContext } from "../../API";
+import { useLocation } from "react-router";
 
 const DetalleEmpresa = (props) => {
 	const { currentUser } = React.useContext(CurrentUserContext);
+	const firebase = useContext(FirebaseContext);
 	console.log(currentUser);
 	console.log(props.datosEmpresa);
+	const [empresa, setEmpresa] = useState(props.datosEmpresa);
+	const location = useLocation();
+
+	if (
+		empresa === null ||
+		empresa === undefined ||
+		Object.entries(empresa).length === 0
+	) {
+		const id = location.pathname.split("/").pop();
+		firebase.getEmpresaByID(id).then((empresa) => {
+			setEmpresa(empresa);
+		});
+	}
 
 	const facebook = () => {
-		if (props.datosEmpresa.facebook !== "") {
+		if (empresa.facebook !== "") {
 			return (
 				<a
-					href={props.datosEmpresa.facebook}
+					href={empresa.facebook}
 					target='_blank'
 					rel='noopener noreferrer'
 				>
@@ -33,10 +49,10 @@ const DetalleEmpresa = (props) => {
 	};
 
 	const instagram = () => {
-		if (props.datosEmpresa.instagram !== "") {
+		if (empresa.instagram !== "") {
 			return (
 				<a
-					href={props.datosEmpresa.instagram}
+					href={empresa.instagram}
 					target='_blank'
 					rel='noopener noreferrer'
 				>
@@ -51,10 +67,10 @@ const DetalleEmpresa = (props) => {
 	};
 
 	const youtube = () => {
-		if (props.datosEmpresa.youtube !== "") {
+		if (empresa.youtube !== "") {
 			return (
 				<a
-					href={props.datosEmpresa.youtube}
+					href={empresa.youtube}
 					target='_blank'
 					rel='noopener noreferrer'
 				>
@@ -69,10 +85,10 @@ const DetalleEmpresa = (props) => {
 	};
 
 	const linkedin = () => {
-		if (props.datosEmpresa.linkedin !== "") {
+		if (empresa.linkedin !== "") {
 			return (
 				<a
-					href={props.datosEmpresa.linkedin}
+					href={empresa.linkedin}
 					target='_blank'
 					rel='noopener noreferrer'
 				>
@@ -85,14 +101,22 @@ const DetalleEmpresa = (props) => {
 			);
 		}
 	};
+	let privInfoSection = null;
 
-	const privInfoSection = () => {
+	if (
+		currentUser !== null &&
+		currentUser !== undefined &&
+		empresa !== null &&
+		empresa !== undefined &&
+		Object.entries(empresa).length !== 0
+	) {
+		console.log(currentUser);
 		if (
 			currentUser.userData.isAdmin ||
 			currentUser.userData.isSubadmin ||
-			currentUser.userData.empresaID === props.datosEmpresa.id
+			currentUser.userData.empresaID === empresa.id
 		) {
-			return (
+			privInfoSection = (
 				<div>
 					<hr></hr>
 					<Row className='text-left h3'>Información Privada:</Row>
@@ -104,15 +128,13 @@ const DetalleEmpresa = (props) => {
 										CEO
 									</div>
 									<div className='font-weight-bold'>
-										{props.datosEmpresa.nombre_ceo}
+										{empresa.nombre_ceo}
 									</div>
-									{props.datosEmpresa.tel_ceo !== 0 && (
-										<div>{props.datosEmpresa.tel_ceo}</div>
+									{empresa.tel_ceo !== 0 && (
+										<div>{empresa.tel_ceo}</div>
 									)}
-									{props.datosEmpresa.email_ceo !== "" && (
-										<div>
-											{props.datosEmpresa.email_ceo}
-										</div>
+									{empresa.email_ceo !== "" && (
+										<div>{empresa.email_ceo}</div>
 									)}
 								</Col>
 								<Col sm='6'>
@@ -120,15 +142,13 @@ const DetalleEmpresa = (props) => {
 										CIO
 									</div>
 									<div className='font-weight-bold'>
-										{props.datosEmpresa.nombre_cio}
+										{empresa.nombre_cio}
 									</div>
-									{props.datosEmpresa.tel_cio !== 0 && (
-										<div>{props.datosEmpresa.tel_ceo}</div>
+									{empresa.tel_cio !== 0 && (
+										<div>{empresa.tel_ceo}</div>
 									)}
-									{props.datosEmpresa.email_cio !== "" && (
-										<div>
-											{props.datosEmpresa.email_cio}
-										</div>
+									{empresa.email_cio !== "" && (
+										<div>{empresa.email_cio}</div>
 									)}
 								</Col>
 							</Row>
@@ -143,20 +163,20 @@ const DetalleEmpresa = (props) => {
 									<div className='col_descripcion border-it_book'>
 										En México
 									</div>
-									<div>{props.datosEmpresa.num_emp_mx}</div>
+									<div>{empresa.num_emp_mx}</div>
 								</Col>
 
 								<Col sm='4'>
 									<div className='col_descripcion border-it_book'>
 										En Nuevo León
 									</div>
-									<div>{props.datosEmpresa.num_emp_nl}</div>
+									<div>{empresa.num_emp_nl}</div>
 								</Col>
 								<Col sm='4'>
 									<div className='col_descripcion border-it_book'>
 										Fuera de México
 									</div>
-									<div>{props.datosEmpresa.num_emp_nomx}</div>
+									<div>{empresa.num_emp_nomx}</div>
 								</Col>
 							</Row>
 							<Row className='justify-content-center mb-4'>
@@ -164,14 +184,14 @@ const DetalleEmpresa = (props) => {
 									<div className='col_descripcion border-it_book'>
 										En área de TI
 									</div>
-									<div>{props.datosEmpresa.num_emp_ti}</div>
+									<div>{empresa.num_emp_ti}</div>
 								</Col>
 
 								<Col sm='4'>
 									<div className='col_descripcion border-it_book'>
 										Administradores
 									</div>
-									<div>{props.datosEmpresa.num_emp_adm}</div>
+									<div>{empresa.num_emp_adm}</div>
 								</Col>
 							</Row>
 							<Row className='justify-content-center h4'>
@@ -182,29 +202,23 @@ const DetalleEmpresa = (props) => {
 									<div className='col_descripcion border-it_book'>
 										Anuales
 									</div>
-									<div>
-										{props.datosEmpresa.ventas_anuales}
-									</div>
+									<div>{empresa.ventas_anuales}</div>
 								</Col>
 
 								<Col>
 									<div className='col_descripcion border-it_book'>
 										Nacionales
 									</div>
-									<div>{props.datosEmpresa.ventas_nat}</div>
+									<div>{empresa.ventas_nat}</div>
 								</Col>
 								<Col>
 									<div className='col_descripcion border-it_book'>
 										Extranjero
 									</div>
-									{props.datosEmpresa.ventas_ext !== "" && (
-										<div>
-											{props.datosEmpresa.ventas_ext}
-										</div>
+									{empresa.ventas_ext !== "" && (
+										<div>{empresa.ventas_ext}</div>
 									)}
-									{props.datosEmpresa.ventas_ext === "" && (
-										<div>$0</div>
-									)}
+									{empresa.ventas_ext === "" && <div>$0</div>}
 								</Col>
 							</Row>
 							<Row className='justify-content-center h4'>
@@ -219,14 +233,18 @@ const DetalleEmpresa = (props) => {
 										<span className='col_descripcion'>
 											Cantidad:
 										</span>{" "}
-										{props.datosEmpresa.num_cert_empresa}
+										{empresa.num_cert_empresa}
 									</div>
 									<div>
 										{Object.entries(
-											props.datosEmpresa.cert_empresa
+											empresa.cert_empresa
 										).map(function ([index, value]) {
 											return (
-												<p style={{ margin: "0px" }}>
+												<p
+													style={{
+														margin: "0px",
+													}}
+												>
 													{value}
 												</p>
 											);
@@ -241,11 +259,9 @@ const DetalleEmpresa = (props) => {
 										<span className='col_descripcion'>
 											Cantidad:
 										</span>{" "}
-										{props.datosEmpresa.num_cert_empleado}
+										{empresa.num_cert_empleado}
 									</div>
-									<div>
-										{props.datosEmpresa.cert_empleado}
-									</div>
+									<div>{empresa.cert_empleado}</div>
 								</Col>
 							</Row>
 						</Col>
@@ -253,130 +269,135 @@ const DetalleEmpresa = (props) => {
 				</div>
 			);
 		}
-	};
-
-	return (
-		<Container>
-			<div className='detalleEmpresa_wrapper'>
-				<Row className='mt-5 text-left h1'>
-					{props.datosEmpresa.nombre_comercial}
-				</Row>
-				<Row className='text-left h4' style={{ color: "#f05d29" }}>
-					{props.datosEmpresa.giro}
-				</Row>
-				<Row>
-					<img
-						className='imgBorder'
-						style={{ width: "100%" }}
-						src={props.datosEmpresa.logo}
-						alt='Logo de Empresa'
-					/>
-				</Row>
-				<Row
-					className='text-left mb-2 m-4'
-					style={{ fontSize: "1.25rem" }}
-				>
-					{props.datosEmpresa.descripcion}
-				</Row>
-				<hr></hr>
-				<Row className='text-center justify-content-center my-4 row_contacto'>
-					<a
-						className='btn btn-it-book'
-						href={props.datosEmpresa.pagina_web}
-						target='_blank'
-						rel='noopener noreferrer'
-						role='button'
+	}
+	if (
+		empresa === null ||
+		empresa === undefined ||
+		Object.entries(empresa).length === 0
+	) {
+		return null;
+	} else {
+		console.log(empresa);
+		return (
+			<Container>
+				<div className='detalleEmpresa_wrapper'>
+					<Row className='mt-5 text-left h1'>
+						{empresa.nombre_comercial}
+					</Row>
+					<Row className='text-left h4' style={{ color: "#f05d29" }}>
+						{empresa.giro}
+					</Row>
+					<Row>
+						<img
+							className='imgBorder'
+							style={{ width: "100%" }}
+							src={empresa.logo}
+							alt='Logo de Empresa'
+						/>
+					</Row>
+					<Row
+						className='text-left mb-2 m-4'
+						style={{ fontSize: "1.25rem" }}
 					>
-						Página Web
-					</a>
-				</Row>
-				<Row className='text-left h3'>Información de Contacto:</Row>
-				<Row className='mb-2'>
-					<Col
-						md='8'
-						className=''
-						style={{ paddingTop: "5px", paddingBottom: "5px" }}
-					>
-						<Row className='text-left row_contacto'>
-							<Col
-								xs='3'
-								style={{ padding: "0px 5px" }}
-								className='row_descripcion '
-							>
-								E-mail:
-							</Col>
-							<Col xs='9' style={{ padding: "0px 5px" }}>
-								{props.datosEmpresa.email}
-							</Col>
-						</Row>
-						<Row className='text-left row_contacto'>
-							<Col
-								xs='3'
-								style={{ padding: "0px 5px" }}
-								className='row_descripcion'
-							>
-								Teléfono:
-							</Col>
-							<Col xs='9' style={{ padding: "0px 5px" }}>
-								{props.datosEmpresa.telefono}
-							</Col>
-						</Row>
-						<Row className='text-left row_contacto'>
-							<Col
-								xs='3'
-								style={{ padding: "0px 5px" }}
-								className='row_descripcion'
-							>
-								Dirección:
-							</Col>
-							<Col xs='9' style={{ padding: "0px 5px" }}>
-								{props.datosEmpresa.domicilio},{" "}
-								{props.datosEmpresa.colonia},{" "}
-								{props.datosEmpresa.municipio},{" "}
-								{props.datosEmpresa.cp}
-							</Col>
-						</Row>
-					</Col>
-					<Col md='4' className='imgBorder'>
-						<Row className='justify-content-center'>
-							Ofrece sus servicios en:
-						</Row>
-						<Row className='justify-content-center font-weight-bold'>
-							{Object.entries(
-								props.datosEmpresa.paises_exp_princ
-							).map(function ([index, value]) {
-								if (
-									index <
-									props.datosEmpresa.paises_exp_princ.length -
-										1
-								) {
-									return value + ", ";
-								}
+						{empresa.descripcion}
+					</Row>
+					<hr></hr>
+					<Row className='text-center justify-content-center my-4 row_contacto'>
+						<a
+							className='btn btn-it-book'
+							href={empresa.pagina_web}
+							target='_blank'
+							rel='noopener noreferrer'
+							role='button'
+						>
+							Página Web
+						</a>
+					</Row>
+					<Row className='text-left h3'>Información de Contacto:</Row>
+					<Row className='mb-2'>
+						<Col
+							md='8'
+							className=''
+							style={{ paddingTop: "5px", paddingBottom: "5px" }}
+						>
+							<Row className='text-left row_contacto'>
+								<Col
+									xs='3'
+									style={{ padding: "0px 5px" }}
+									className='row_descripcion '
+								>
+									E-mail:
+								</Col>
+								<Col xs='9' style={{ padding: "0px 5px" }}>
+									{empresa.email}
+								</Col>
+							</Row>
+							<Row className='text-left row_contacto'>
+								<Col
+									xs='3'
+									style={{ padding: "0px 5px" }}
+									className='row_descripcion'
+								>
+									Teléfono:
+								</Col>
+								<Col xs='9' style={{ padding: "0px 5px" }}>
+									{empresa.telefono}
+								</Col>
+							</Row>
+							<Row className='text-left row_contacto'>
+								<Col
+									xs='3'
+									style={{ padding: "0px 5px" }}
+									className='row_descripcion'
+								>
+									Dirección:
+								</Col>
+								<Col xs='9' style={{ padding: "0px 5px" }}>
+									{empresa.domicilio}, {empresa.colonia},{" "}
+									{empresa.municipio}, {empresa.cp}
+								</Col>
+							</Row>
+						</Col>
+						<Col md='4' className='imgBorder'>
+							<Row className='justify-content-center'>
+								Ofrece sus servicios en:
+							</Row>
+							<Row className='justify-content-center font-weight-bold'>
+								{Object.entries(empresa.paises_exp_princ).map(
+									function ([index, value]) {
+										if (
+											index <
+											empresa.paises_exp_princ.length - 1
+										) {
+											return value + ", ";
+										}
 
-								return value;
-							})}
-							{/* {props.datosEmpresa.paises_exp_princ} */}
-						</Row>
-					</Col>
-				</Row>
-				<Row style={{ padding: "10px 0px" }}>
-					<Col xs='auto' style={{ padding: "0px 5px" }}>
-						{linkedin()}
-					</Col>
-					<Col xs='auto' style={{ padding: "0px 5px" }}>
-						{facebook()}
-					</Col>
-					<Col xs='auto' style={{ padding: "0px 5px" }}>
-						{instagram()}
-					</Col>
-					<Col xs='auto' style={{ padding: "0px 5px" }}>
-						{youtube()}
-					</Col>
-				</Row>
-				{privInfoSection()}
-			</div>
-		</Container>
-	);
+										return value;
+									}
+								)}
+								{/* {empresa.paises_exp_princ} */}
+							</Row>
+						</Col>
+					</Row>
+					<Row style={{ padding: "10px 0px" }}>
+						<Col xs='auto' style={{ padding: "0px 5px" }}>
+							{linkedin()}
+						</Col>
+						<Col xs='auto' style={{ padding: "0px 5px" }}>
+							{facebook()}
+						</Col>
+						<Col xs='auto' style={{ padding: "0px 5px" }}>
+							{instagram()}
+						</Col>
+						<Col xs='auto' style={{ padding: "0px 5px" }}>
+							{youtube()}
+						</Col>
+					</Row>
+					{privInfoSection}
+				</div>
+			</Container>
+		);
+	}
 };
 
 export default DetalleEmpresa;
