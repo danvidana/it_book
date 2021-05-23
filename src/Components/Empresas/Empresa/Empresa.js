@@ -9,7 +9,13 @@ const Empresa = (props) => {
 			<Card
 				style={{ width: "18rem", height: "16rem", margin: "0px auto" }}
 			>
-				<Card.Header style={{borderColor: "#f05d29", backgroundColor: "#f05d29", color: "#ffffff"}}>
+				<Card.Header
+					style={{
+						borderColor: "#f05d29",
+						backgroundColor: "#f05d29",
+						color: "#ffffff",
+					}}
+				>
 					{props.empresa.nombre_comercial}
 				</Card.Header>
 				<Card.Body>
@@ -25,7 +31,7 @@ const Empresa = (props) => {
 							props.setEmpresa(props.empresa);
 						}}
 						as={Link}
-						to={"/empresa/" + props.empresa.nombre_comercial}
+						to={"/empresa/" + props.empresa.id}
 					>
 						Ver más
 					</Button>
