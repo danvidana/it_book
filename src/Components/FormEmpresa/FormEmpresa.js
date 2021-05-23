@@ -29,7 +29,7 @@ const FormEmpresa = () => {
 		colonia: "",
 		municipio: "",
 		cp: "",
-		telefono: 0,
+		telefono: "",
 		email: "",
 		pagina_web: "",
 		nombre_ceo: "",
@@ -113,6 +113,14 @@ const FormEmpresa = () => {
 					setArrayCountries(arrayCountries);
 					setCertEmpleado(
 						empresa.cert_empleado.map((certificacion) => {
+							return {
+								value: certificacion,
+								label: certificacion,
+							};
+						})
+					);
+					setCertEmpresas(
+						empresa.cert_empresa.map((certificacion) => {
 							return {
 								value: certificacion,
 								label: certificacion,
@@ -235,6 +243,33 @@ const FormEmpresa = () => {
 			{
 				label: "CCP-V: Citrix Certified Professional – Virtualization",
 				value: "CCP-V: Citrix Certified Professional – Virtualization",
+			},
+		];
+	}, []);
+
+	const dict_certEmpresas = useMemo(() => {
+		return [
+			{ 
+				label: "CMMI Nivel 2",
+				value: "CMMI Nivel 2" 
+			}, { 
+				label: "CMMI Nivel 3",
+				value: "CMMI Nivel 3" 
+			}, { 
+				label: "CMMI Nivel 5",
+				value: "CMMI Nivel 5" 
+			}, { 
+				label: "ISO 27001",
+				value: "ISO 27001" 
+			}, { 
+				label: "ISO 29110",
+				value: "ISO 29110" 
+			}, { 
+				label: "TSP",
+				value: "TSP" 
+			}, { 
+				label: "PSP",
+				value: "PSP" 
 			},
 		];
 	}, []);
@@ -393,6 +428,22 @@ const FormEmpresa = () => {
 	};
 
 	// Certificaciones empresa
+	const [certEmpresas, setCertEmpresas] = useState([]);
+
+	// guarda en un arreglo las certificaciones seleccionadas
+	const handleSelectCertEmpresas = (selectedOptions) => {
+		const selectedValues = selectedOptions.map((option) => {
+			return option.value;
+		});
+		// console.log(selectedOptions)
+		setCertEmpresas(selectedOptions);
+		setItem({
+			...item,
+			cert_empresa: selectedValues,
+		});
+	};
+
+	// Certificaciones empleados
 	const [certEmpleado, setCertEmpleado] = useState([]);
 
 	// guarda en un arreglo las certificaciones seleccionadas
@@ -626,7 +677,7 @@ const FormEmpresa = () => {
 										cp: parseInt(str.currentTarget.value),
 									});
 								}}
-								value={item.cp || null}
+								value={item.cp || ""}
 								required
 							/>
 							<Form.Control.Feedback type='invalid'>
@@ -650,7 +701,7 @@ const FormEmpresa = () => {
 										),
 									});
 								}}
-								value={item.telefono || null}
+								value={item.telefono || ""}
 								required
 							/>
 							<Form.Control.Feedback type='invalid'>
@@ -884,7 +935,7 @@ const FormEmpresa = () => {
 										),
 									});
 								}}
-								value={item.tel_ceo || null}
+								value={item.tel_ceo || ""}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -955,7 +1006,7 @@ const FormEmpresa = () => {
 										),
 									});
 								}}
-								value={item.tel_cio || null}
+								value={item.tel_cio || ""}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -1039,7 +1090,7 @@ const FormEmpresa = () => {
 								required
 								value={
 									isNaN(item.num_emp_nl)
-										? null
+										? ""
 										: item.num_emp_nl
 								}
 							>
@@ -1065,7 +1116,7 @@ const FormEmpresa = () => {
 								}}
 								value={
 									isNaN(item.num_emp_mx)
-										? null
+										? ""
 										: item.num_emp_mx
 								}
 								required
@@ -1092,7 +1143,7 @@ const FormEmpresa = () => {
 								}}
 								value={
 									isNaN(item.num_emp_nomx)
-										? null
+										? ""
 										: item.num_emp_nomx
 								}
 								required
@@ -1122,7 +1173,7 @@ const FormEmpresa = () => {
 								required
 								value={
 									isNaN(item.num_emp_ti)
-										? null
+										? ""
 										: item.num_emp_ti
 								}
 							>
@@ -1150,7 +1201,7 @@ const FormEmpresa = () => {
 								}}
 								value={
 									isNaN(item.num_emp_adm)
-										? null
+										? ""
 										: item.num_emp_adm
 								}
 								required
@@ -1164,9 +1215,9 @@ const FormEmpresa = () => {
 				<h6>Ventas</h6>
 
 				<p>
-					<small>
+				<small>
 						Seleccione el rango de ventas que mejor corresponda para
-						cada opción.
+						cada opción. La unidadades de ventas están en dólares estadounidenses (USD).
 					</small>
 				</p>
 
@@ -1184,7 +1235,7 @@ const FormEmpresa = () => {
 										ventas_nat: str.currentTarget.value,
 									});
 								}}
-								value={item.ventas_nat || null}
+								value={item.ventas_nat}
 								required
 							>
 								{getRangosVentas()}
@@ -1202,11 +1253,11 @@ const FormEmpresa = () => {
 								onChange={(str) => {
 									setItem({
 										...item,
-										porcentaje_ventas_ext:
+										ventas_ext:
 											str.currentTarget.value,
 									});
 								}}
-								value={item.porcentaje_ventas_ext}
+								value={item.ventas_ext}
 								required
 							>
 								{getRangosVentas()}
@@ -1305,7 +1356,7 @@ const FormEmpresa = () => {
 								}}
 								value={
 									isNaN(item.num_cert_empresa)
-										? null
+										? ""
 										: item.num_cert_empresa
 								}
 								required
@@ -1316,19 +1367,26 @@ const FormEmpresa = () => {
 					</Col>
 
 					<Col md={8}>
-						<Form.Group controlId=''>
+					<Form.Group controlId=''>
 							<Form.Label>
 								Certificaciones de la empresa
 							</Form.Label>
-							<Form.Control
-								placeholder='Ej. FITSP, CompTIA A+ Essentials...'
-								onChange={(str) => {
-									setItem({
-										...item,
-										cert_empresa: str.currentTarget.value,
-									});
+							<MultiSelect
+								overrideStrings={{
+									selectSomeItems: "Selecciona las certificaciones",
+									allItemsAreSelected: "Todos",
+									selectAll: "Todos",
+									search: "Buscar",
 								}}
-								value={item.cert_empresa}
+								options={dict_certEmpresas}
+								value={certEmpresas}
+								onChange={handleSelectCertEmpresas}
+								// onChange={(str) => {
+								// 	setItem({
+								// 		...item,
+								// 		paises_exp_princ: str.currentTarget.value,
+								// 	});
+								// }}
 								required
 							/>
 							{/* <Form.Control
@@ -1342,6 +1400,19 @@ const FormEmpresa = () => {
 								value={item.cert_empresa}
 								required
 							/> */}
+							<Form.Check>
+								<Form.Check.Input
+									checked={
+										certEmpresas.length > 0
+									}
+									onChange={() => {}}
+									style={{ display: "none" }}
+									required
+								/>
+								<Form.Control.Feedback type='invalid'>
+									Seleccionar una o más certificaciones
+								</Form.Control.Feedback>
+							</Form.Check>
 						</Form.Group>
 					</Col>
 				</Row>
@@ -1371,7 +1442,7 @@ const FormEmpresa = () => {
 								}}
 								value={
 									isNaN(item.num_cert_empleado)
-										? null
+										? ""
 										: item.num_cert_empleado
 								}
 								required
@@ -1408,7 +1479,6 @@ const FormEmpresa = () => {
 							<Form.Check>
 								<Form.Check.Input
 									checked={
-										certEmpleado != null &&
 										certEmpleado.length > 0
 									}
 									onChange={() => {}}
