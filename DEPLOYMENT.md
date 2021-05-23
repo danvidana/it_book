@@ -10,5 +10,5 @@ npm install
 npm start
 ```
 
-O entrar a la siguiente liga:
-https://it-book-f23b6.firebaseapp.com/
+Or enter the following link:
+[https://it-book-f23b6.firebaseapp.com/](https://it-book-f23b6.firebaseapp.com/)
