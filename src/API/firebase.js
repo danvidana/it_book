@@ -112,15 +112,12 @@ class Firebase {
 			.where("giro", "==", giro)
 			.get();
 		console.log(empresas)
-		if(empresas["docs"].length === 0) {
-			return this.getAllEmpresas()
-		} else {
-			return empresas.docs.map((doc) => {
-				var data = doc.data();
-				data.id = doc.id;
-				return data;
-			});
-		}
+
+		return empresas.docs.map((doc) => {
+			var data = doc.data();
+			data.id = doc.id;
+			return data;
+		});
 	};
 
 	// getEmpresasByName = async (name, limit) => {
@@ -174,6 +171,7 @@ class Firebase {
 			.collection("Empresas")
 			.where("giro", "==", giro)
 			.where('keyword','array-contains',name.toLowerCase())
+			.limit(limit)
 			.get();
 			return empresas.docs.map((doc) => {
 				var data = doc.data();
