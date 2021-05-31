@@ -11,6 +11,7 @@ import MultiSelect from "react-multi-select-component";
 const FormEmpresa = () => {
 	const firebase = useContext(FirebaseContext);
 	const [countries, setCountries] = useState([]);
+	const [countryCodes, setCountryCodes] = useState([]);
 	const [validated, setValidated] = useState(false);
 	const location = useLocation();
 	const { currentUser, fetchCurrentUser } =
@@ -29,6 +30,7 @@ const FormEmpresa = () => {
 		colonia: "",
 		municipio: "",
 		cp: "",
+		lada: "",
 		telefono: "",
 		email: "",
 		pagina_web: "",
@@ -332,6 +334,7 @@ const FormEmpresa = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			var dict_countries = [];
+			var array_ladas = [];
 			const searchURL = "https://restcountries.eu/rest/v2/all";
 			const response = await fetch(searchURL);
 			const responseData = await response.json();
@@ -347,8 +350,15 @@ const FormEmpresa = () => {
 						value: element["name"],
 					});
 				}
+
+				if(element['callingCodes'][0] !== "") {
+					array_ladas.push(parseInt(element['callingCodes'][0]));
+				}
+				
 			});
 			setCountries(dict_countries);
+			// sort and remove duplicates
+			setCountryCodes(array_ladas.filter((v, i, a) => a.indexOf(v) === i).sort((a,b)=>a-b));
 		};
 		fetchData();
 	}, []);
@@ -363,6 +373,23 @@ const FormEmpresa = () => {
 			...item,
 			paises_exp_princ: selectedValues,
 		});
+	};
+
+	// regresa las opciones areas
+	const getCountryCodes = function () {
+		return [
+			<option value='' key={0} disabled>
+				Selecciona una opción
+			</option>,
+		].concat(
+			countryCodes.map((value, index) => {
+				return (
+					<option key={index + 1} value={value}>
+						{value}
+					</option>
+				);
+			})
+		);
 	};
 
 	// Imagen logo
@@ -647,7 +674,7 @@ const FormEmpresa = () => {
 				</Row>
 
 				<Row>
-					<Col sm={4}>
+					<Col sm={6} md={3} lg={4}>
 						<Form.Group controlId=''>
 							<Form.Label>Municipio</Form.Label>
 							<Form.Control
@@ -664,7 +691,7 @@ const FormEmpresa = () => {
 						</Form.Group>
 					</Col>
 
-					<Col sm={4}>
+					<Col sm={6} md={3} lg={2}>
 						<Form.Group controlId=''>
 							<Form.Label>Código Postal</Form.Label>
 							<Form.Control
@@ -686,7 +713,26 @@ const FormEmpresa = () => {
 						</Form.Group>
 					</Col>
 
-					<Col sm={4}>
+					<Col xs={5} sm={6} md={3} lg={2}>
+						<Form.Group controlId=''>
+							<Form.Label>Lada</Form.Label>
+							<Form.Control
+								as='select'
+								defaultValue= ""
+								onChange={(str) => {
+									setItem({
+										...item,
+										lada: parseInt(str.currentTarget.value),
+									});
+								}}
+								required
+							>
+								{getCountryCodes()}
+							</Form.Control>
+						</Form.Group>
+					</Col>
+
+					<Col xs={7} sm={6} md={3} lg={4}>
 						<Form.Group controlId=''>
 							<Form.Label>Teléfono</Form.Label>
 							<Form.Control

@@ -341,7 +341,7 @@ const DetalleEmpresa = (props) => {
 									Teléfono:
 								</Col>
 								<Col xs='9' style={{ padding: "0px 5px" }}>
-									{empresa.telefono}
+									(+{empresa.lada}) {empresa.telefono}
 								</Col>
 							</Row>
 							<Row className='text-left row_contacto'>
