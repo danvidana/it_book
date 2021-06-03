@@ -111,7 +111,7 @@ class Firebase {
 			.collection("Empresas")
 			.where("giro", "==", giro)
 			.get();
-		console.log(empresas)
+		console.log(empresas);
 
 		return empresas.docs.map((doc) => {
 			var data = doc.data();
@@ -149,7 +149,7 @@ class Firebase {
 	getEmpresasByName = async (name, limit) => {
 		const empresas = await this.firestore
 			.collection("Empresas")
-			.where('keyword','array-contains',name.toLowerCase())
+			.where("keyword", "array-contains", name.toLowerCase())
 			.limit(limit)
 			.get();
 		return empresas.docs.map((doc) => {
@@ -160,19 +160,19 @@ class Firebase {
 	};
 
 	getEmpresasByNameGiro = async (giro, name, limit) => {
-		if(giro === "" && name === "") {
-			return this.getAllEmpresas()
-		} else if(giro === "" && name !== "") {
-			return this.getEmpresasByName(name, limit)
-		} else if(giro !== "" && name === "") {
-			return this.getEmpresasByGiro(giro)
+		if (giro === "" && name === "") {
+			return this.getAllEmpresas();
+		} else if (giro === "" && name !== "") {
+			return this.getEmpresasByName(name, limit);
+		} else if (giro !== "" && name === "") {
+			return this.getEmpresasByGiro(giro);
 		} else {
 			const empresas = await this.firestore
-			.collection("Empresas")
-			.where("giro", "==", giro)
-			.where('keyword','array-contains',name.toLowerCase())
-			.limit(limit)
-			.get();
+				.collection("Empresas")
+				.where("giro", "==", giro)
+				.where("keyword", "array-contains", name.toLowerCase())
+				.limit(limit)
+				.get();
 			return empresas.docs.map((doc) => {
 				var data = doc.data();
 				data.id = doc.id;
@@ -213,45 +213,50 @@ class Firebase {
 		if (image !== null) {
 			empresa["logo"] = await this.uploadFile(image, "images");
 		}
-		const arrName = [''];
-		let curName = '';
-		empresa["nombre_comercial"].toLowerCase().split('').forEach((letter)=> {
-			curName += letter;
-			arrName.push(curName);
-		});
+		const arrName = [""];
+		let curName = "";
+		empresa["nombre_comercial"]
+			.toLowerCase()
+			.split("")
+			.forEach((letter) => {
+				curName += letter;
+				arrName.push(curName);
+			});
 
-		empresa["keyword"] = arrName
+		empresa["keyword"] = arrName;
 		console.log(arrName);
 
 		return this.firestore.collection("Empresas").add(empresa);
 	};
 
 	createKeywords = (empresaNombre) => {
-		const arrName = [''];
-		let curName = '';
-		empresaNombre.split('').forEach((letter)=> {
+		const arrName = [""];
+		let curName = "";
+		empresaNombre.split("").forEach((letter) => {
 			curName += letter;
 			arrName.push(curName);
 		});
 
 		return arrName;
-	}
-
+	};
 
 	updateEmpresa = async (id, empresa, image = null) => {
 		if (image !== null) {
 			empresa["logo"] = await this.uploadFile(image, "images");
 		}
-		
-		const arrName = [''];
-		let curName = '';
-		empresa["nombre_comercial"].toLowerCase().split('').forEach((letter)=> {
-			curName += letter;
-			arrName.push(curName);
-		});
-		empresa["keyword"] = arrName
+
+		const arrName = [""];
+		let curName = "";
+		empresa["nombre_comercial"]
+			.toLowerCase()
+			.split("")
+			.forEach((letter) => {
+				curName += letter;
+				arrName.push(curName);
+			});
+		empresa["keyword"] = arrName;
 		console.log(arrName);
-	
+
 		return this.firestore.collection("Empresas").doc(id).update(empresa);
 	};
 
