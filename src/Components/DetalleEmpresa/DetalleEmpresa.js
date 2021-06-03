@@ -10,6 +10,7 @@ import { CurrentUserContext } from "../../CurrentUserContext";
 import "./DetalleEmpresa.css";
 import { FirebaseContext } from "../../API";
 import { useLocation } from "react-router";
+import { parsePhoneNumber } from "libphonenumber-js";
 
 const DetalleEmpresa = (props) => {
 	const { currentUser } = React.useContext(CurrentUserContext);
@@ -116,6 +117,14 @@ const DetalleEmpresa = (props) => {
 			currentUser.userData.isSubadmin ||
 			currentUser.userData.empresaID === empresa.id
 		) {
+			let tel_ceo = "";
+			if (empresa.tel_ceo !== "") {
+				tel_ceo = parsePhoneNumber(empresa.tel_ceo);
+			}
+			let tel_cio = "";
+			if (empresa.tel_cio !== "") {
+				tel_cio = parsePhoneNumber(empresa.tel_cio);
+			}
 			privInfoSection = (
 				<div>
 					<hr></hr>
@@ -130,8 +139,12 @@ const DetalleEmpresa = (props) => {
 									<div className='font-weight-bold'>
 										{empresa.nombre_ceo}
 									</div>
-									{empresa.tel_ceo !== 0 && (
-										<div>{empresa.tel_ceo}</div>
+									{tel_ceo !== "" && (
+										<div>
+											<a href={tel_ceo.getURI()}>
+												{tel_ceo.formatInternational()}
+											</a>
+										</div>
 									)}
 									{empresa.email_ceo !== "" && (
 										<div>{empresa.email_ceo}</div>
@@ -144,8 +157,12 @@ const DetalleEmpresa = (props) => {
 									<div className='font-weight-bold'>
 										{empresa.nombre_cio}
 									</div>
-									{empresa.tel_cio !== 0 && (
-										<div>{empresa.tel_ceo}</div>
+									{tel_cio !== "" && (
+										<div>
+											<a href={tel_cio.getURI()}>
+												{tel_cio.formatInternational()}
+											</a>
+										</div>
 									)}
 									{empresa.email_cio !== "" && (
 										<div>{empresa.email_cio}</div>
@@ -277,6 +294,7 @@ const DetalleEmpresa = (props) => {
 	) {
 		return null;
 	} else {
+		const telefono = parsePhoneNumber(empresa.telefono);
 		console.log(empresa);
 		return (
 			<Container>
@@ -341,7 +359,9 @@ const DetalleEmpresa = (props) => {
 									Teléfono:
 								</Col>
 								<Col xs='9' style={{ padding: "0px 5px" }}>
-									{empresa.telefono}
+									<a href={telefono.getURI()}>
+										{telefono.formatInternational()}
+									</a>
 								</Col>
 							</Row>
 							<Row className='text-left row_contacto'>
