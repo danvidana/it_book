@@ -5,14 +5,16 @@ import { CurrentUserContext } from "../../CurrentUserContext";
 import "./FormEmpresa.css";
 import { useHistory, useLocation } from "react-router";
 import MultiSelect from "react-multi-select-component";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 // Componente del formulario para dar de alta una empresa
-
 const FormEmpresa = () => {
 	const firebase = useContext(FirebaseContext);
 	const [countries, setCountries] = useState([]);
-	const [countryCodes, setCountryCodes] = useState([]);
 	const [validated, setValidated] = useState(false);
+	const [submitEnabled, setSubmitEnabled] = useState(true);
 	const location = useLocation();
 	const { currentUser, fetchCurrentUser } =
 		React.useContext(CurrentUserContext);
@@ -251,27 +253,33 @@ const FormEmpresa = () => {
 
 	const dict_certEmpresas = useMemo(() => {
 		return [
-			{ 
+			{
 				label: "CMMI Nivel 2",
-				value: "CMMI Nivel 2" 
-			}, { 
+				value: "CMMI Nivel 2",
+			},
+			{
 				label: "CMMI Nivel 3",
-				value: "CMMI Nivel 3" 
-			}, { 
+				value: "CMMI Nivel 3",
+			},
+			{
 				label: "CMMI Nivel 5",
-				value: "CMMI Nivel 5" 
-			}, { 
+				value: "CMMI Nivel 5",
+			},
+			{
 				label: "ISO 27001",
-				value: "ISO 27001" 
-			}, { 
+				value: "ISO 27001",
+			},
+			{
 				label: "ISO 29110",
-				value: "ISO 29110" 
-			}, { 
+				value: "ISO 29110",
+			},
+			{
 				label: "TSP",
-				value: "TSP" 
-			}, { 
+				value: "TSP",
+			},
+			{
 				label: "PSP",
-				value: "PSP" 
+				value: "PSP",
 			},
 		];
 	}, []);
@@ -334,7 +342,6 @@ const FormEmpresa = () => {
 	useEffect(() => {
 		const fetchData = async () => {
 			var dict_countries = [];
-			var array_ladas = [];
 			const searchURL = "https://restcountries.eu/rest/v2/all";
 			const response = await fetch(searchURL);
 			const responseData = await response.json();
@@ -350,15 +357,9 @@ const FormEmpresa = () => {
 						value: element["name"],
 					});
 				}
-
-				if(element['callingCodes'][0] !== "") {
-					array_ladas.push(parseInt(element['callingCodes'][0]));
-				}
-				
 			});
 			setCountries(dict_countries);
 			// sort and remove duplicates
-			setCountryCodes(array_ladas.filter((v, i, a) => a.indexOf(v) === i).sort((a,b)=>a-b));
 		};
 		fetchData();
 	}, []);
@@ -373,23 +374,6 @@ const FormEmpresa = () => {
 			...item,
 			paises_exp_princ: selectedValues,
 		});
-	};
-
-	// regresa las opciones areas
-	const getCountryCodes = function () {
-		return [
-			<option value='' key={0} disabled>
-				Selecciona una opción
-			</option>,
-		].concat(
-			countryCodes.map((value, index) => {
-				return (
-					<option key={index + 1} value={value}>
-						{value}
-					</option>
-				);
-			})
-		);
 	};
 
 	// Imagen logo
@@ -713,45 +697,35 @@ const FormEmpresa = () => {
 						</Form.Group>
 					</Col>
 
-					<Col xs={5} sm={6} md={3} lg={2}>
-						<Form.Group controlId=''>
-							<Form.Label>Lada</Form.Label>
-							<Form.Control
-								as='select'
-								defaultValue= ""
-								onChange={(str) => {
-									setItem({
-										...item,
-										lada: parseInt(str.currentTarget.value),
-									});
-								}}
-								required
-							>
-								{getCountryCodes()}
-							</Form.Control>
-						</Form.Group>
-					</Col>
-
 					<Col xs={7} sm={6} md={3} lg={4}>
 						<Form.Group controlId=''>
 							<Form.Label>Teléfono</Form.Label>
-							<Form.Control
-								placeholder='Teléfono'
-								type='text'
-								pattern='[0-9]{10}'
+							<PhoneInput
+								country='mx'
+								enableSearch
+								required
+								value={item.telefono}
+								isValid={(value, country) => {
+									value = "+" + value;
+									if (
+										isValidPhoneNumber(value, country.iso2)
+									) {
+										setSubmitEnabled(true);
+										return true;
+									} else {
+										setSubmitEnabled(false);
+										return false;
+									}
+								}}
 								onChange={(str) => {
 									setItem({
 										...item,
-										telefono: parseInt(
-											str.currentTarget.value
-										),
+										telefono: "+" + str,
 									});
 								}}
-								value={item.telefono || ""}
-								required
 							/>
 							<Form.Control.Feedback type='invalid'>
-								Deben ser 10 dígitos
+								Numero invalido
 							</Form.Control.Feedback>
 						</Form.Group>
 					</Col>
@@ -969,19 +943,34 @@ const FormEmpresa = () => {
 					<Col md={4}>
 						<Form.Group controlId=''>
 							<Form.Label>Teléfono CEO</Form.Label>
-							<Form.Control
-								placeholder='Teléfono CEO'
-								type='text'
-								pattern='[0-9]{10}'
+							<PhoneInput
+								enableSearch
+								required
+								value={item.tel_ceo}
+								isValid={(value, country) => {
+									if (value === "") {
+										return true;
+									}
+									value = "+" + value;
+									if (
+										isValidPhoneNumber(value, country.iso2)
+									) {
+										setSubmitEnabled(true);
+										return true;
+									} else {
+										setSubmitEnabled(false);
+										return false;
+									}
+								}}
 								onChange={(str) => {
+									if (str !== "") {
+										str = "+" + str;
+									}
 									setItem({
 										...item,
-										tel_ceo: parseInt(
-											str.currentTarget.value
-										),
+										tel_ceo: str,
 									});
 								}}
-								value={item.tel_ceo || ""}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -1040,19 +1029,34 @@ const FormEmpresa = () => {
 					<Col md={4}>
 						<Form.Group controlId=''>
 							<Form.Label>Teléfono CIO</Form.Label>
-							<Form.Control
-								placeholder='Teléfono CIO'
-								type='text'
-								pattern='[0-9]{10}'
+							<PhoneInput
+								enableSearch
+								required
+								value={item.tel_cio}
+								isValid={(value, country) => {
+									if (value === "") {
+										return true;
+									}
+									value = "+" + value;
+									if (
+										isValidPhoneNumber(value, country.iso2)
+									) {
+										setSubmitEnabled(true);
+										return true;
+									} else {
+										setSubmitEnabled(false);
+										return false;
+									}
+								}}
 								onChange={(str) => {
+									if (str !== "") {
+										str = "+" + str;
+									}
 									setItem({
 										...item,
-										tel_cio: parseInt(
-											str.currentTarget.value
-										),
+										tel_cio: str,
 									});
 								}}
-								value={item.tel_cio || ""}
 							/>
 							<Form.Text className='text-muted'>
 								Opcional
@@ -1261,9 +1265,10 @@ const FormEmpresa = () => {
 				<h6>Ventas</h6>
 
 				<p>
-				<small>
+					<small>
 						Seleccione el rango de ventas que mejor corresponda para
-						cada opción. La unidadades de ventas están en dólares estadounidenses (USD).
+						cada opción. La unidadades de ventas están en dólares
+						estadounidenses (USD).
 					</small>
 				</p>
 
@@ -1299,8 +1304,7 @@ const FormEmpresa = () => {
 								onChange={(str) => {
 									setItem({
 										...item,
-										ventas_ext:
-											str.currentTarget.value,
+										ventas_ext: str.currentTarget.value,
 									});
 								}}
 								value={item.ventas_ext}
@@ -1413,13 +1417,14 @@ const FormEmpresa = () => {
 					</Col>
 
 					<Col md={8}>
-					<Form.Group controlId=''>
+						<Form.Group controlId=''>
 							<Form.Label>
 								Certificaciones de la empresa
 							</Form.Label>
 							<MultiSelect
 								overrideStrings={{
-									selectSomeItems: "Selecciona las certificaciones",
+									selectSomeItems:
+										"Selecciona las certificaciones",
 									allItemsAreSelected: "Todos",
 									selectAll: "Todos",
 									search: "Buscar",
@@ -1448,9 +1453,7 @@ const FormEmpresa = () => {
 							/> */}
 							<Form.Check>
 								<Form.Check.Input
-									checked={
-										certEmpresas.length > 0
-									}
+									checked={certEmpresas.length > 0}
 									onChange={() => {}}
 									style={{ display: "none" }}
 									required
@@ -1524,9 +1527,7 @@ const FormEmpresa = () => {
 							/>
 							<Form.Check>
 								<Form.Check.Input
-									checked={
-										certEmpleado.length > 0
-									}
+									checked={certEmpleado.length > 0}
 									onChange={() => {}}
 									style={{ display: "none" }}
 									required
@@ -1544,6 +1545,7 @@ const FormEmpresa = () => {
 					className='btn-submit'
 					variant='primary'
 					type='submit'
+					disabled={!submitEnabled}
 				>
 					Guardar
 				</Button>
