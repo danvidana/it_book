@@ -13,10 +13,10 @@ https://it-book-f23b6.firebaseapp.com/
 * [Setup the project](#setup-the-project)
 * [Running the stack for development](#running-the-stack-for-development)
 * [Stop the project](#stop-the-project)
-* [Restoring the database](#restoring-the-database)
+<!-- * [Restoring the database](#restoring-the-database)
 * [Debugging](#debugging)
 * [Running specs](#running-specs)
-* [Checking code for potential issues](#checking-code-for-potential-issues)
+* [Checking code for potential issues](#checking-code-for-potential-issues) -->
 
 ### Client Details
 
@@ -27,8 +27,8 @@ https://it-book-f23b6.firebaseapp.com/
 
 ### Environment URLS
 
-* **Production** - [TBD](TBD)
-* **Development** - [TBD](TBD)
+* **Production** - [https://it-book-f23b6.firebaseapp.com/](https://it-book-f23b6.firebaseapp.com/)
+<!-- * **Development** - [TBD](TBD) -->
 
 ### The Team
 
@@ -147,9 +147,9 @@ This will stop every container, but if you need to stop one in particular, you c
 
 `web` is the service name located on the `docker-compose.yml` file, there you can see the services name and stop each of them if you need to. -->
 
-### Restoring the database
+<!-- ### Restoring the database
 
-<!-- You probably won't be working with a blank database, so once you are able to run crowdfront you can restore the database, to do it, first stop all services:
+You probably won't be working with a blank database, so once you are able to run crowdfront you can restore the database, to do it, first stop all services:
 
 ```
 % plis stop
@@ -183,9 +183,9 @@ Once the script finishes its execution you can just exit the session from the co
 % plis start
 ``` -->
 
-### Debugging
+<!-- ### Debugging
 
-<!-- We know you love to use `debugger`, and who doesn't, and with Docker is a bit tricky, but don't worry, we have you covered.
+We know you love to use `debugger`, and who doesn't, and with Docker is a bit tricky, but don't worry, we have you covered.
 
 Just run this line at the terminal and you can start debugging like a pro:
 
@@ -197,9 +197,9 @@ This will display the logs from the rails app, as well as give you access to sto
 
 **Take note that if you kill this process you will kill the web service, and you will probably need to lift it up again.** -->
 
-### Running specs
+<!-- ### Running specs
 
-<!-- To run specs, you can do:
+To run specs, you can do:
 
 ```
 $ plis run test rspec
@@ -211,9 +211,9 @@ Or for a specific file:
 $ plis run test rspec spec/models/user_spec.rb
 ``` -->
 
-### Checking code for potential issues
+<!-- ### Checking code for potential issues
 
-<!-- To run specs, you can do:
+To run specs, you can do:
 
 ```
 $ plis run web reek
